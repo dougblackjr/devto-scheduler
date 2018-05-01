@@ -14,10 +14,11 @@
                         </div>
                     @endif
 
-                    <main id="calendar"></main>
+                    <full-calendar :events="events"></full-calendar>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

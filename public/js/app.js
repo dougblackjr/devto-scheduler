@@ -30652,7 +30652,58 @@ window.Vue = __webpack_require__(188);
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_full_calendar__["a" /* default */]);
 
 var app = new Vue({
-    el: '#app'
+	el: '#app',
+	data: function data() {
+		return {
+			events: [{
+				title: 'event1',
+				start: '2010-01-01'
+			}, {
+				title: 'event2',
+				start: '2010-01-05',
+				end: '2010-01-07'
+			}, {
+				title: 'event3',
+				start: '2010-01-09T12:30:00',
+				allDay: false
+			}]
+		};
+	},
+
+	methods: {
+		refreshEvents: function refreshEvents() {
+			this.$refs.calendar.$emit('refetch-events');
+		},
+		removeEvent: function removeEvent() {
+			this.$refs.calendar.$emit('remove-event', this.selected);
+			this.selected = {};
+		},
+		eventSelected: function eventSelected(event) {
+			this.selected = event;
+		},
+		eventCreated: function eventCreated() {
+			for (var _len = arguments.length, test = Array(_len), _key = 0; _key < _len; _key++) {
+				test[_key] = arguments[_key];
+			}
+
+			console.log(test);
+		}
+	},
+
+	computed: {
+		eventSources: function eventSources() {
+			var self = this;
+			return [{
+				events: function events(start, end, timezone, callback) {
+					setTimeout(function () {
+						callback(self.events.filter(function () {
+							return Math.random() > 0.5;
+						}));
+					}, 1000);
+				}
+			}];
+		}
+	}
 });
 
 /***/ }),
