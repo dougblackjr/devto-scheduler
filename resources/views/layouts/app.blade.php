@@ -19,6 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/fullcalendar.min.css') }}" rel="stylesheet"> --}}
 </head>
 <body>
     <div id="app">

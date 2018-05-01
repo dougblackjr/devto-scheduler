@@ -22,6 +22,7 @@
     },
     "dependencies": {
         "fullcalendar": "^3.9.0",
+        "fullcalendar-scheduler": "^1.9.4",
         "laravel-echo": "^1.3.5",
         "pusher-js": "^4.2.2",
         "vue-full-calendar": "^2.5.4"

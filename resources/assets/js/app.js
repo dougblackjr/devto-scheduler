@@ -1,31 +1,28 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
+window.Vue = require('vue')
 import FullCalendar from 'vue-full-calendar'
+import 'fullcalendar-scheduler'
+import 'fullcalendar/dist/fullcalendar.min.css'
+import 'fullcalendar-scheduler/dist/scheduler.min.css'
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue'));
+// Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.use(FullCalendar)
 
 const app = new Vue({
 	el: '#app',
 	data() {
 		return {
-			events: [
-				{
-					title  : 'event1',
-					start  : '2010-01-01',
-				},
-				{
-					title  : 'event2',
-					start  : '2010-01-05',
-					end    : '2010-01-07',
-				},
-				{
-					title  : 'event3',
-					start  : '2010-01-09T12:30:00',
-					allDay : false,
-				},
-			]
+			config: {
+			        defaultView: 'timelineMonth',
+			        events: [
+			          // events go here
+			        ],
+			        resources: [
+			          // resources go here
+			        ]
+			        // other options go here...
+			      },
 		}
 	},
 	methods: {
