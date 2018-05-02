@@ -1,11 +1,16 @@
 require('./bootstrap');
 
+// Dependencies
 window.Vue = require('vue')
 import FullCalendar from 'vue-full-calendar'
 import 'fullcalendar-scheduler'
 const moment = require('moment');
+const toastr = require('toastr');
+
+// Stylesheets
 import 'fullcalendar/dist/fullcalendar.min.css'
 import 'fullcalendar-scheduler/dist/scheduler.min.css'
+import 'toastr/build/toastr.min.css';
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.use(FullCalendar)
