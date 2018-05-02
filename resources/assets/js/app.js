@@ -13,12 +13,15 @@ import 'fullcalendar-scheduler/dist/scheduler.min.css'
 import 'toastr/build/toastr.min.css';
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue'))
+Vue.component('modal', require('./components/Modal.vue'))
 Vue.use(FullCalendar)
 
 const app = new Vue({
 	el: '#app',
+
 	data() {
 		return {
+			showModal: false,
 			events: [
 				{
 					title: "test",
@@ -52,16 +55,37 @@ const app = new Vue({
 						]
 					}
 				],
+				customButtons: {
+					promptResource: {
+						text: '+ room',
+						click: function(event) {
+							var title = prompt('Room name');
+							if (title) {
+								$('#calendar').fullCalendar(
+									'addResource',
+									{ title: title },
+									true
+								);
+							}
+						}
+					}
+				},
 				defaultView: "timelineDay",
 				header: {
-					left: "prev,next",
+					left: "promptResource today prev,next",
 					center: "title",
-					right: "timelineDay,agendaDay,month"
+					right: "agendaDay,timelineDay,agendaWeek,month"
 				},
 			}
 		}
 	},
 	methods: {
+		broadcastResource(resource) {
+			axios.post('/task', task)
+			    .then((response) => {
+			        this.tasks.push(response.data);
+			    });
+		},
 		refreshEvents() {
 			this.$refs.calendar.$emit('refetch-events');
 		},
