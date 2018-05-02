@@ -24,45 +24,35 @@ const app = new Vue({
 				{
 					title: "test",
 					resourceId: "a2",
-					start: moment().add(2, "h").subtract(3, 'h'),
+					start: moment().add(2, "h"),
 					end: moment().add(3, "h")
-				}
-			],
-			resourceLabelText: "Rooms",
-			resources: [
-				{
-					id: "a",
-					title: "Room A",
-					children: [
-						{
-							id: "a1",
-							title: "Room A1"
-						},
-						{
-							id: "a2",
-							title: "Room A2"
-						}
-					]
 				}
 			],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+				resourceLabelText: "Rooms",
+				resources: [
+					{
+						id: "a",
+						title: "Room A",
+						children: [
+							{
+								id: "a1",
+								title: "Room A1"
+							},
+							{
+								id: "a2",
+								title: "Room A2"
+							}
+						]
+					}
+				],
 				defaultView: "timelineDay",
 				header: {
 					left: "prev,next",
 					center: "title",
-					right: "timelineDay,timelineWeek,timelineMonth"
+					right: "timelineDay,agendaDay,month"
 				},
-				views: {
-					timelineOneDay: {
-						type: 'timeline',	
-						duration: { days: 1 },
-						buttonText: 'One Day'
-					},
-					agenda: {
-						eventLimit: 3
-					}
-				}
 			}
 		}
 	},

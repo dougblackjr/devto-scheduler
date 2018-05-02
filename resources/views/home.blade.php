@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    <full-calendar :events="events"></full-calendar>
+                    <full-calendar :events="events" :config="config"></full-calendar>
                 </div>
             </div>
         </div>
