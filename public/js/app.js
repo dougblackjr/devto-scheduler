@@ -46131,31 +46131,39 @@ var app = new Vue({
 	data: function data() {
 		return {
 			showModal: false,
-			events: [{
-				title: "test",
-				resourceId: "a",
-				start: moment(),
-				end: moment().add(1, "h")
-			}, {
-				title: "test",
-				resourceId: "a2",
-				start: moment().add(2, "h"),
-				end: moment().add(3, "h")
-			}],
+			// events: [
+			// 	{
+			// 		title: "test",
+			// 		resourceId: "a",
+			// 		start: moment(),
+			// 		end: moment().add(1, "h")
+			// 	},
+			// 	{
+			// 		title: "test",
+			// 		resourceId: "a2",
+			// 		start: moment().add(2, "h"),
+			// 		end: moment().add(3, "h")
+			// 	}
+			// ],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 				resourceLabelText: "Rooms",
-				resources: [{
-					id: "a",
-					title: "Room A",
-					children: [{
-						id: "a1",
-						title: "Room A1"
-					}, {
-						id: "a2",
-						title: "Room A2"
-					}]
-				}],
+				// resources: [
+				// 	{
+				// 		id: "a",
+				// 		title: "Room A",
+				// 		children: [
+				// 			{
+				// 				id: "a1",
+				// 				title: "Room A1"
+				// 			},
+				// 			{
+				// 				id: "a2",
+				// 				title: "Room A2"
+				// 			}
+				// 		]
+				// 	}
+				// ],
 				customButtons: {
 					promptResource: {
 						text: '+ room',
@@ -46178,13 +46186,7 @@ var app = new Vue({
 	},
 
 	methods: {
-		broadcastResource: function broadcastResource(resource) {
-			var _this = this;
-
-			axios.post('/task', task).then(function (response) {
-				_this.tasks.push(response.data);
-			});
-		},
+		broadcastResource: function broadcastResource(resource) {},
 		refreshEvents: function refreshEvents() {
 			this.$refs.calendar.$emit('refetch-events');
 		},
@@ -46205,6 +46207,16 @@ var app = new Vue({
 	},
 
 	computed: {
+		eventResources: function eventResources(start, end, timezone, callback) {
+			var self = this;
+			return [{
+				resources: function resources(callback) {
+					axios.get('/resources').then(function (response) {
+						callback(response.data.data);
+					});
+				}
+			}];
+		},
 		eventSources: function eventSources() {
 			var self = this;
 			return [{

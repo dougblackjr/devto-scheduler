@@ -22,39 +22,39 @@ const app = new Vue({
 	data() {
 		return {
 			showModal: false,
-			events: [
-				{
-					title: "test",
-					resourceId: "a",
-					start: moment(),
-					end: moment().add(1, "h")
-				},
-				{
-					title: "test",
-					resourceId: "a2",
-					start: moment().add(2, "h"),
-					end: moment().add(3, "h")
-				}
-			],
+			// events: [
+			// 	{
+			// 		title: "test",
+			// 		resourceId: "a",
+			// 		start: moment(),
+			// 		end: moment().add(1, "h")
+			// 	},
+			// 	{
+			// 		title: "test",
+			// 		resourceId: "a2",
+			// 		start: moment().add(2, "h"),
+			// 		end: moment().add(3, "h")
+			// 	}
+			// ],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 				resourceLabelText: "Rooms",
-				resources: [
-					{
-						id: "a",
-						title: "Room A",
-						children: [
-							{
-								id: "a1",
-								title: "Room A1"
-							},
-							{
-								id: "a2",
-								title: "Room A2"
-							}
-						]
-					}
-				],
+				// resources: [
+				// 	{
+				// 		id: "a",
+				// 		title: "Room A",
+				// 		children: [
+				// 			{
+				// 				id: "a1",
+				// 				title: "Room A1"
+				// 			},
+				// 			{
+				// 				id: "a2",
+				// 				title: "Room A2"
+				// 			}
+				// 		]
+				// 	}
+				// ],
 				customButtons: {
 					promptResource: {
 						text: '+ room',
@@ -81,10 +81,7 @@ const app = new Vue({
 	},
 	methods: {
 		broadcastResource(resource) {
-			axios.post('/task', task)
-			    .then((response) => {
-			        this.tasks.push(response.data);
-			    });
+			
 		},
 		refreshEvents() {
 			this.$refs.calendar.$emit('refetch-events');
@@ -105,6 +102,20 @@ const app = new Vue({
 	},
 
 	computed: {
+		eventResources(start, end, timezone, callback) {
+			const self = this;
+			return [
+				{
+					resources(callback) {
+						axios.get('/resources')
+							.then((response) => {
+								callback(response.data.data)
+							}
+						)
+					}
+				}
+			]
+		},
 		eventSources() {
 			const self = this;
 			return [
