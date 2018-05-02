@@ -14,11 +14,17 @@ class AddAppointment extends Migration
     public function up()
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->increments();
+            $table->increments('id');
             $table->string('title');
             $table->string('description');
             $table->dateTime('start')->nullable();
             $table->dateTime('end')->nullable();
+            $table->unsignedInteger('resource_id');
+            $table->foreign('resource_id')
+                    ->references('id')
+                    ->on('resources')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
             $table->timestamps();
             $table->softDeletes();
 
