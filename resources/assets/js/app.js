@@ -62,6 +62,9 @@ const app = new Vue({
 								{
 									title: title
 								})
+								.then((response) => {
+									toastr.info('Resource added')
+								})
 							}
 						}
 					}

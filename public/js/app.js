@@ -46270,6 +46270,8 @@ var app = new Vue({
 
 								window.axios.post('/resources', {
 									title: title
+								}).then(function (response) {
+									toastr.info('Resource added');
 								});
 							}
 						}
