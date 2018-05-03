@@ -20,13 +20,13 @@ class AppointmentController extends Controller
 	public function add(Request $request)
 	{
 
-		$resource = Appointment::create(
+		$resource = Appointment::create([
 			'title' => $request->title,
 			'description' => $request->description,
 			'start' => new Chronos($request->start),
 			'end' => new Chronos($request->end),
 			'resource_id' => $request->resource_id
-		);
+		]);
 
 	}
 

@@ -20,3 +20,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Resource
+Route::get('/resources', 'ResourceController@index');
+Route::post('/resources', 'ResourceController@add');
+
+//Resource
+Route::get('/appointments', 'AppointmentController@index');
+Route::post('/appointments', 'AppointmentController@index');

@@ -18,18 +18,29 @@ class ResourceController extends Controller
 	public function add(Request $request)
 	{
 
-		$resource = Resource::create(
+		$resource = Resource::create([
 			'title' => $request->title
-		);
+		]);
 
 	}
 
 	public function index()
 	{
 
-		$resources = Resource::pluck('id', 'title')->get();
+		$outputData = array();
 
-		return response()->json($resources);
+		$resources = Resource::all();
+
+		$resources->each(function($r) use(&$outputData) {
+
+			$outputData[] = array(
+				'id' => $r->id,
+				'title' => $r->title
+			);
+
+		});
+
+		return response()->json($outputData);
 
 	}
 

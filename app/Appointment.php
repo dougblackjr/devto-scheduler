@@ -9,7 +9,7 @@ class Appointment extends Model
 {
 	use SoftDeletes;
 
-	protected $table = 'events';
+	protected $table = 'appointments';
 
 	protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 

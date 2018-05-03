@@ -22,39 +22,31 @@ const app = new Vue({
 	data() {
 		return {
 			showModal: false,
-			// events: [
-			// 	{
-			// 		title: "test",
-			// 		resourceId: "a",
-			// 		start: moment(),
-			// 		end: moment().add(1, "h")
-			// 	},
-			// 	{
-			// 		title: "test",
-			// 		resourceId: "a2",
-			// 		start: moment().add(2, "h"),
-			// 		end: moment().add(3, "h")
-			// 	}
-			// ],
+			events: [
+				{
+					title: "test",
+					resourceId: 2,
+					start: moment(),
+					end: moment().add(1, "h")
+				},
+				{
+					title: "test",
+					resourceId: 1,
+					start: moment().add(2, "h"),
+					end: moment().add(3, "h")
+				}
+			],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 				resourceLabelText: "Rooms",
-				// resources: [
-				// 	{
-				// 		id: "a",
-				// 		title: "Room A",
-				// 		children: [
-				// 			{
-				// 				id: "a1",
-				// 				title: "Room A1"
-				// 			},
-				// 			{
-				// 				id: "a2",
-				// 				title: "Room A2"
-				// 			}
-				// 		]
-				// 	}
-				// ],
+				resources: function(callback, start, end, timezone) {
+					window.axios.get('/resources')
+						.then((response) => {
+							console.log(response.data)
+							callback(response.data)
+						}
+					)
+				},
 				customButtons: {
 					promptResource: {
 						text: '+ room',
@@ -121,9 +113,7 @@ const app = new Vue({
 			return [
 				{
 					events(start, end, timezone, callback) {
-						setTimeout(() => {
-							callback(self.events.filter(() => Math.random() > 0.5));
-						}, 1000);
+						axios.get('/appointments')
 					},
 				},
 			];
