@@ -46238,6 +46238,7 @@ var app = new Vue({
 	el: '#app',
 
 	data: function data() {
+		var self = this;
 		return {
 			showModal: false,
 			eventSources: [{
@@ -46262,18 +46263,9 @@ var app = new Vue({
 				},
 				customButtons: {
 					promptResource: {
-						text: '+ room',
+						text: 'Add Room',
 						click: function click(event) {
-							var title = prompt('Room name');
-							if (title) {
-								$('#calendar').fullCalendar('addResource', { title: title }, true);
-
-								window.axios.post('/resources', {
-									title: title
-								}).then(function (response) {
-									toastr.info('Resource added');
-								});
-							}
+							self.toggleModal();
 						}
 					}
 				},
@@ -46288,6 +46280,10 @@ var app = new Vue({
 	},
 
 	methods: {
+		toggleModal: function toggleModal() {
+
+			this.showModal = !this.showModal;
+		},
 		broadcastResource: function broadcastResource(resource) {},
 		refreshEvents: function refreshEvents() {
 			this.$refs.calendar.$emit('refetch-events');
@@ -95416,13 +95412,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      directives: [
-        { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
-      ],
-      staticClass: "modal-mask",
-      attrs: { transition: "modal" }
-    },
+    { staticClass: "modal-mask", attrs: { transition: "modal" } },
     [
       _c("div", { staticClass: "modal-mask" }, [
         _c("div", { staticClass: "modal-wrapper" }, [

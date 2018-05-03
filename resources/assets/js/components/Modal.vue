@@ -1,5 +1,5 @@
 <template id="modal-template">
-	<div class="modal-mask" v-show="show" transition="modal">
+	<div class="modal-mask" transition="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper">
 				<div class="modal-container">

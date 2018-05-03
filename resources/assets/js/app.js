@@ -20,6 +20,7 @@ const app = new Vue({
 	el: '#app',
 
 	data() {
+		var self = this;
 		return {
 			showModal: false,
 			eventSources: [
@@ -48,24 +49,9 @@ const app = new Vue({
 				},
 				customButtons: {
 					promptResource: {
-						text: '+ room',
+						text: 'Add Room',
 						click: function(event) {
-							var title = prompt('Room name');
-							if (title) {
-								$('#calendar').fullCalendar(
-									'addResource',
-									{ title: title },
-									true
-								);
-
-								window.axios.post('/resources',
-								{
-									title: title
-								})
-								.then((response) => {
-									toastr.info('Resource added')
-								})
-							}
+							self.toggleModal();
 						}
 					}
 				},
@@ -79,6 +65,11 @@ const app = new Vue({
 		}
 	},
 	methods: {
+		toggleModal() {
+
+			this.showModal = !this.showModal;
+
+		},
 		broadcastResource(resource) {
 			
 		},
