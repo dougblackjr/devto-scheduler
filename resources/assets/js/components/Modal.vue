@@ -1,29 +1,35 @@
+const toastr = require('toastr');
+
 <template id="modal-template">
 	<div class="modal-mask" transition="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper">
 				<div class="modal-container">
+					<form>
+					<!-- <form v-on:submit.prevent="submit"> -->
+						<div class="modal-header">
+							<slot name="header">
+								Add Room
+							</slot>
+						</div>
 
-					<div class="modal-header">
-						<slot name="header">
-							default header
-						</slot>
-					</div>
+						<div class="modal-body">
+							<slot name="body">
+								<input type="text" name="resourceTitle" placeholder="Your room title" v-model="title"/>
+							</slot>
+						</div>
 
-					<div class="modal-body">
-						<slot name="body">
-							default body
-						</slot>
-					</div>
-
-					<div class="modal-footer">
-						<slot name="footer">
-							default footer
-							<button class="modal-default-button" @click="$emit('close')">
-								OK
-							</button>
-						</slot>
-					</div>
+						<div class="modal-footer">
+							<slot name="footer">
+								<button type="submit" class="modal-success-button" @click.prevent="submit()">
+									Submit
+								</button>
+								<button type="cancel" class="modal-default-button" @click.prevent="$emit('close')">
+									Close
+								</button>
+							</slot>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -32,9 +38,42 @@
 
 <script>
 	export default {
-		props: ['showModal'],
+		props: [
+			'showModal'
+		],
+		data() {
+			return {
+				title: ''
+			}
+		},
+		methods: {
+			submit() {
+				// Get the title
+				// this.title = submitEvent.target.elements.resourceTitle.value
+				
+				// CLose the modal
+				this.$emit('close');
+
+				// Submit
+				if (this.title != '') {
+					$('#calendar').fullCalendar(
+						'addResource',
+						{ title: this.title },
+						true
+					);
+
+					window.axios.post('/resources',
+					{
+						title: this.title
+					})
+					.then((response) => {
+						window.toastr.info('Resource added')
+					})
+				}
+			}
+		},
 		mounted() {
-			console.log('Component mounted.')
+			console.log('Modal is on!')
 		}
 	}
 </script>
@@ -79,6 +118,10 @@
 
 	.modal-default-button {
 		float: right;
+	}
+
+	.modal-success-button {
+		float: left;
 	}
 
 	.modal-enter {

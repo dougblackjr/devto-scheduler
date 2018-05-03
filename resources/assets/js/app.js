@@ -5,7 +5,6 @@ window.Vue = require('vue')
 import FullCalendar from 'vue-full-calendar'
 import 'fullcalendar-scheduler'
 const moment = require('moment');
-const toastr = require('toastr');
 
 // Stylesheets
 import 'fullcalendar/dist/fullcalendar.min.css'

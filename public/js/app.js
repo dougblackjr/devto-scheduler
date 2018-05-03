@@ -46223,7 +46223,6 @@ window.Vue = __webpack_require__(192);
 
 
 var moment = __webpack_require__(0);
-var toastr = __webpack_require__(230);
 
 // Stylesheets
 
@@ -46339,6 +46338,9 @@ try {
 window.axios = __webpack_require__(171);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Adding toastr globally
+window.toastr = __webpack_require__(230);
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -95090,7 +95092,7 @@ exports = module.exports = __webpack_require__(11)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-6e8d36f4] {\n\tposition: fixed;\n\tz-index: 9998;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbackground-color: rgba(0, 0, 0, .5);\n\tdisplay: table;\n\t-webkit-transition: opacity .3s ease;\n\ttransition: opacity .3s ease;\n}\n.modal-wrapper[data-v-6e8d36f4] {\n\tdisplay: table-cell;\n\tvertical-align: middle;\n}\n.modal-container[data-v-6e8d36f4] {\n\twidth: 300px;\n\tmargin: 0px auto;\n\tpadding: 20px 30px;\n\tbackground-color: #fff;\n\tborder-radius: 2px;\n\t-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t-webkit-transition: all .3s ease;\n\ttransition: all .3s ease;\n\tfont-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-6e8d36f4] {\n\tmargin-top: 0;\n\tcolor: #42b983;\n}\n.modal-body[data-v-6e8d36f4] {\n\tmargin: 20px 0;\n}\n.modal-default-button[data-v-6e8d36f4] {\n\tfloat: right;\n}\n.modal-enter[data-v-6e8d36f4] {\n\topacity: 0;\n}\n.modal-leave-active[data-v-6e8d36f4] {\n\topacity: 0;\n}\n.modal-enter .modal-container[data-v-6e8d36f4],\n.modal-leave-active .modal-container[data-v-6e8d36f4] {\n\t-webkit-transform: scale(1.1);\n\ttransform: scale(1.1);\n}\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-6e8d36f4] {\n\tposition: fixed;\n\tz-index: 9998;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbackground-color: rgba(0, 0, 0, .5);\n\tdisplay: table;\n\t-webkit-transition: opacity .3s ease;\n\ttransition: opacity .3s ease;\n}\n.modal-wrapper[data-v-6e8d36f4] {\n\tdisplay: table-cell;\n\tvertical-align: middle;\n}\n.modal-container[data-v-6e8d36f4] {\n\twidth: 300px;\n\tmargin: 0px auto;\n\tpadding: 20px 30px;\n\tbackground-color: #fff;\n\tborder-radius: 2px;\n\t-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t-webkit-transition: all .3s ease;\n\ttransition: all .3s ease;\n\tfont-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-6e8d36f4] {\n\tmargin-top: 0;\n\tcolor: #42b983;\n}\n.modal-body[data-v-6e8d36f4] {\n\tmargin: 20px 0;\n}\n.modal-default-button[data-v-6e8d36f4] {\n\tfloat: right;\n}\n.modal-success-button[data-v-6e8d36f4] {\n\tfloat: left;\n}\n.modal-enter[data-v-6e8d36f4] {\n\topacity: 0;\n}\n.modal-leave-active[data-v-6e8d36f4] {\n\topacity: 0;\n}\n.modal-enter .modal-container[data-v-6e8d36f4],\n.modal-leave-active .modal-container[data-v-6e8d36f4] {\n\t-webkit-transform: scale(1.1);\n\ttransform: scale(1.1);\n}\n", ""]);
 
 // exports
 
@@ -95394,11 +95396,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['showModal'],
+	data: function data() {
+		return {
+			title: ''
+		};
+	},
+
+	methods: {
+		submit: function submit() {
+			// Get the title
+			// this.title = submitEvent.target.elements.resourceTitle.value
+
+			// CLose the modal
+			this.$emit('close');
+
+			// Submit
+			if (this.title != '') {
+				$('#calendar').fullCalendar('addResource', { title: this.title }, true);
+
+				window.axios.post('/resources', {
+					title: this.title
+				}).then(function (response) {
+					window.toastr.info('Resource added');
+				});
+			}
+		}
+	},
 	mounted: function mounted() {
-		console.log('Component mounted.');
+		console.log('Modal is on!');
 	}
 });
 
@@ -95417,50 +95451,91 @@ var render = function() {
       _c("div", { staticClass: "modal-mask" }, [
         _c("div", { staticClass: "modal-wrapper" }, [
           _c("div", { staticClass: "modal-container" }, [
-            _c(
-              "div",
-              { staticClass: "modal-header" },
-              [
-                _vm._t("header", [
-                  _vm._v("\n\t\t\t\t\t\tdefault header\n\t\t\t\t\t")
-                ])
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "modal-body" },
-              [
-                _vm._t("body", [
-                  _vm._v("\n\t\t\t\t\t\tdefault body\n\t\t\t\t\t")
-                ])
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "modal-footer" },
-              [
-                _vm._t("footer", [
-                  _vm._v("\n\t\t\t\t\t\tdefault footer\n\t\t\t\t\t\t"),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "modal-default-button",
+            _c("form", [
+              _c(
+                "div",
+                { staticClass: "modal-header" },
+                [
+                  _vm._t("header", [
+                    _vm._v("\n\t\t\t\t\t\t\tAdd Room\n\t\t\t\t\t\t")
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body" },
+                [
+                  _vm._t("body", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.title,
+                          expression: "title"
+                        }
+                      ],
+                      attrs: {
+                        type: "text",
+                        name: "resourceTitle",
+                        placeholder: "Your room title"
+                      },
+                      domProps: { value: _vm.title },
                       on: {
-                        click: function($event) {
-                          _vm.$emit("close")
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.title = $event.target.value
                         }
                       }
-                    },
-                    [_vm._v("\n\t\t\t\t\t\t\tOK\n\t\t\t\t\t\t")]
-                  )
-                ])
-              ],
-              2
-            )
+                    })
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-footer" },
+                [
+                  _vm._t("footer", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "modal-success-button",
+                        attrs: { type: "submit" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.submit()
+                          }
+                        }
+                      },
+                      [_vm._v("\n\t\t\t\t\t\t\t\tSubmit\n\t\t\t\t\t\t\t")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "modal-default-button",
+                        attrs: { type: "cancel" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.$emit("close")
+                          }
+                        }
+                      },
+                      [_vm._v("\n\t\t\t\t\t\t\t\tClose\n\t\t\t\t\t\t\t")]
+                    )
+                  ])
+                ],
+                2
+              )
+            ])
           ])
         ])
       ])
