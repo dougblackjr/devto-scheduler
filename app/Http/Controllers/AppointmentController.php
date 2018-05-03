@@ -38,11 +38,11 @@ class AppointmentController extends Controller
 		$resources = Appointment::whereBetween('start', [$request->startDate, $request->endDate])
 								->get();
 
-		$resources->each(function ($r) use ($outputData) {
+		$resources->each(function ($r) use (&$outputData) {
 
 			$outputData[] = array(
 				'id' => $r->id,
-				'resource_id' => $r->resource_id,
+				'resourceId' => $r->resource_id,
 				'title' => $r->title,
 				'description' => $r->description,
 				'start' => $r->start,
@@ -51,7 +51,7 @@ class AppointmentController extends Controller
 
 		});
 
-		return response()->json($resources);
+		return response()->json($outputData);
 
 	}
 
