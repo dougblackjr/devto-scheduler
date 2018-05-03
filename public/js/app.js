@@ -46240,16 +46240,16 @@ var app = new Vue({
 	data: function data() {
 		return {
 			showModal: false,
-			events: [{
-				title: "test",
-				resourceId: 2,
-				start: moment(),
-				end: moment().add(1, "h")
-			}, {
-				title: "test",
-				resourceId: 1,
-				start: moment().add(2, "h"),
-				end: moment().add(3, "h")
+			eventSources: [{
+				events: function events(start, end, timezone, callback) {
+					window.axios.post('/appointments', {
+						startDate: start,
+						endDate: end
+					}).then(function (response) {
+						console.log(response.data);
+						callback(response.data);
+					});
+				}
 			}],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -46267,6 +46267,10 @@ var app = new Vue({
 							var title = prompt('Room name');
 							if (title) {
 								$('#calendar').fullCalendar('addResource', { title: title }, true);
+
+								window.axios.post('/resources', {
+									title: title
+								});
 							}
 						}
 					}
@@ -46302,26 +46306,7 @@ var app = new Vue({
 		}
 	},
 
-	computed: {
-		eventResources: function eventResources(start, end, timezone, callback) {
-			var self = this;
-			return [{
-				resources: function resources(callback) {
-					axios.get('/resources').then(function (response) {
-						callback(response.data.data);
-					});
-				}
-			}];
-		},
-		eventSources: function eventSources() {
-			var self = this;
-			return [{
-				events: function events(start, end, timezone, callback) {
-					axios.get('/appointments');
-				}
-			}];
-		}
-	}
+	computed: {}
 });
 
 /***/ }),

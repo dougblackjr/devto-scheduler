@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    <full-calendar :events="events" :event-sources="eventSources" :event-resources="eventResources" :config="config"></full-calendar>
+                    <full-calendar :event-sources="eventSources" :config="config"></full-calendar>
                     <modal v-if="showModal" @close="showModal = false">
                         <h3 slot="header">custom header</h3>
                     </modal>

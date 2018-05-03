@@ -22,20 +22,19 @@ const app = new Vue({
 	data() {
 		return {
 			showModal: false,
-			events: [
-				{
-					title: "test",
-					resourceId: 2,
-					start: moment(),
-					end: moment().add(1, "h")
-				},
-				{
-					title: "test",
-					resourceId: 1,
-					start: moment().add(2, "h"),
-					end: moment().add(3, "h")
+			eventSources: [
+			{
+				events(start, end, timezone, callback) {
+					window.axios.post('/appointments', {
+						startDate: start,
+						endDate: end
+					})
+					.then((response) => {
+						console.log(response.data)
+						callback(response.data)
+					})
 				}
-			],
+			}],
 			config: {
 				schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
 				resourceLabelText: "Rooms",
@@ -58,6 +57,11 @@ const app = new Vue({
 									{ title: title },
 									true
 								);
+
+								window.axios.post('/resources',
+								{
+									title: title
+								})
 							}
 						}
 					}
@@ -94,29 +98,6 @@ const app = new Vue({
 	},
 
 	computed: {
-		eventResources(start, end, timezone, callback) {
-			const self = this;
-			return [
-				{
-					resources(callback) {
-						axios.get('/resources')
-							.then((response) => {
-								callback(response.data.data)
-							}
-						)
-					}
-				}
-			]
-		},
-		eventSources() {
-			const self = this;
-			return [
-				{
-					events(start, end, timezone, callback) {
-						axios.get('/appointments')
-					},
-				},
-			];
-		},
+		
 	}
 });

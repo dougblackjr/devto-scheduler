@@ -42,7 +42,7 @@ class AppointmentController extends Controller
 
 			$outputData[] = array(
 				'id' => $r->id,
-				'resourceId' => $r->resource_id,
+				'resource_id' => $r->resource_id,
 				'title' => $r->title,
 				'description' => $r->description,
 				'start' => $r->start,
