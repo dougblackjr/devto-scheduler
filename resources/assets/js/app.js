@@ -13,6 +13,7 @@ import 'toastr/build/toastr.min.css';
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('modal', require('./components/Modal.vue'))
+Vue.component('apptmodal', require('./components/ApptModal.vue'))
 Vue.use(FullCalendar)
 
 const app = new Vue({
@@ -22,6 +23,8 @@ const app = new Vue({
 		var self = this;
 		return {
 			showModal: false,
+			showApptModal: false,
+			allResourceInfo: {},
 			eventSources: [
 			{
 				events(start, end, timezone, callback) {
@@ -42,6 +45,7 @@ const app = new Vue({
 					window.axios.get('/resources')
 						.then((response) => {
 							console.log(response.data)
+							self.allResourceInfo = response.data
 							callback(response.data)
 						}
 					)
@@ -52,11 +56,17 @@ const app = new Vue({
 						click: function(event) {
 							self.toggleModal();
 						}
+					},
+					addAppt: {
+						text: 'Add Appt',
+						click: function(event) {
+							self.toggleApptModal();
+						}
 					}
 				},
 				defaultView: "timelineDay",
 				header: {
-					left: "promptResource today prev,next",
+					left: "promptResource addAppt today prev,next",
 					center: "title",
 					right: "agendaDay,timelineDay,agendaWeek,month"
 				},
@@ -66,31 +76,45 @@ const app = new Vue({
 	methods: {
 		toggleModal() {
 
-			this.showModal = !this.showModal;
+			this.showModal = !this.showModal
+
+		},
+		toggleApptModal() {
+
+			this.showApptModal = !this.showApptModal
 
 		},
 		broadcastResource(resource) {
 			
 		},
 		refreshEvents() {
-			this.$refs.calendar.$emit('refetch-events');
+			this.$refs.calendar.$emit('refetch-events')
+			this.$refs.calendar.$emit('refetch-resources')
 		},
 
 		removeEvent() {
-			this.$refs.calendar.$emit('remove-event', this.selected);
+
+			this.$refs.calendar.$emit('remove-event', this.selected)
 			this.selected = {};
+
 		},
 
 		eventSelected(event) {
-			this.selected = event;
+
+			this.selected = event
+
 		},
 
 		eventCreated(...test) {
-			console.log(test);
+
+			console.log(test)
+
 		},
+
 	},
 
 	computed: {
 		
 	}
+
 });

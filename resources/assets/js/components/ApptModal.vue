@@ -7,13 +7,21 @@
 					<!-- <form v-on:submit.prevent="submit"> -->
 						<div class="modal-header">
 							<slot name="header">
-								Add Room
+								Add Appointment
 							</slot>
 						</div>
 
 						<div class="modal-body">
 							<slot name="body">
-								<input type="text" name="resourceTitle" placeholder="Your room title" v-model="title"/>
+								<input type="text" name="apptTitle" placeholder="Your appt title" v-model="title"/>
+								<input type="text" name="apptDescription" placeholder="Your appt description" v-model="description"/>
+								<datetime format="MM/DD/YYYY" width="300px" v-model='start'></datetime>
+								<datetime format="MM/DD/YYYY" width="300px" v-model='end'></datetime>
+								<select v-model="resource_id">
+									<option v-for="t in resources" v-bind:value="t.id">
+										{{ t.title }}
+									</option>
+								</select>
 							</slot>
 						</div>
 
@@ -35,16 +43,22 @@
 </template>
 
 <script>
-	
-	let self = this;
+	import datetime from 'vuejs-datetimepicker';
 
 	export default {
+		components: {datetime},
 		props: [
-			'showModal'
+			'showApptModal',
+			'res'
 		],
 		data() {
 			return {
-				title: ''
+				title: '',
+				description: '',
+				start: '',
+				end: '',
+				resource_id: 0,
+				resources: this.res
 			}
 		},
 		methods: {
@@ -69,13 +83,13 @@
 					})
 					.then((response) => {
 						window.toastr.info('Resource added')
-						self.$emit('refreshEvents');
 					})
 				}
 			}
 		},
 		mounted() {
-			console.log('Modal is on!')
+			console.log('APpt Modal is on!')
+			console.log('props', this.resources)
 		}
 	}
 </script>

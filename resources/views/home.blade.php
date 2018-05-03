@@ -15,9 +15,8 @@
                     @endif
 
                     <full-calendar :event-sources="eventSources" :config="config"></full-calendar>
-                    <modal v-if="showModal" @close="showModal = false">
-                        <h3 slot="header">custom header</h3>
-                    </modal>
+                    <modal v-if="showModal" @close="showModal = false"></modal>
+                    <apptmodal :res="allResourceInfo" v-if="showApptModal" @close="showApptModal = false"></apptmodal>
                 </div>
             </div>
         </div>
