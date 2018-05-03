@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Resource;
 use App\Appointment;
 use Auth;
+use Cake\Chronos\Chronos;
 
 class AppointmentController extends Controller
 {
@@ -22,7 +23,8 @@ class AppointmentController extends Controller
 		$resource = Appointment::create(
 			'title' => $request->title,
 			'description' => $request->description,
-			// 'start'
+			'start' => new Chronos($request->start),
+			'end' => new Chronos($request->end),
 			'resource_id' => $request->resource_id
 		);
 
