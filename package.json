@@ -30,6 +30,7 @@
         "pusher-js": "^4.2.2",
         "toastr": "^2.1.4",
         "vue-full-calendar": "^2.5.4",
+        "vue-js-toggle-button": "^1.2.3",
         "vuejs-datetimepicker": "^1.1.5"
     }
 }

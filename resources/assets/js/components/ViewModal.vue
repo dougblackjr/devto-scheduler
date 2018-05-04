@@ -7,7 +7,7 @@
 					<!-- <form v-on:submit.prevent="submit"> -->
 						<div class="modal-header">
 							<slot name="header">
-								Add Appointment
+								Edit Appointment
 							</slot>
 						</div>
 
@@ -24,11 +24,10 @@
 									</select>
 								</div>
 								<div class="modal-body-right">
-									<label>Schedule Now or Later</label>
-									<toggle-button :value="true" :labels="{checked: 'Now', unchecked: 'Later'}" v-model="showTimes" height=45 width=75 />
+									<toggle-button :value="true" :labels="{checked: 'Now', unchecked: 'Later'}" v-model="showTimes" />
 									<div v-if="showTimes">
-										<input type="datetime-local" v-model="start" />
-										<input type="datetime-local" v-model="end" />
+										<datetime type="datetime" width="300" v-model='start'></datetime>
+										<datetime type="datetime" width="300" v-model='end'></datetime>
 									</div>
 								</div>
 							</slot>
@@ -36,7 +35,7 @@
 
 						<div class="modal-footer">
 							<slot name="footer">
-								<button type="submit" class="modal-success-button" @click.prevent="submitAppointment()">
+								<button type="submit" class="modal-success-button" @click.prevent="submit()">
 									Submit
 								</button>
 								<button type="cancel" class="modal-default-button" @click.prevent="$emit('close')">
@@ -52,49 +51,45 @@
 </template>
 
 <script>
-	const moment = require('moment');
-
 	import datetime from 'vuejs-datetimepicker';
 
 	export default {
 		components: {datetime},
 		props: [
 			'showApptModal',
-			'res',
-			'intitle',
-			'indescription',
-			'instart',
-			'inend',
-			'inresourceid'
+			'res'
 		],
 		data() {
 			return {
-				title: this.intitle,
-				description: this.indescription,
-				start: this.instart,
-				end: this.inend,
-				resource_id: this.inresourceid,
+				title: '',
+				description: '',
+				start: '',
+				end: '',
+				resource_id: 0,
 				resources: this.res,
 				showTimes: true
 			}
 		},
 		methods: {
-			submitAppointment() {
+			submit() {				
 				let self = this
 
 				// Submit
 				if (this.title != '') {
+					$('#calendar').fullCalendar(
+						'addResource',
+						{ title: this.title },
+						true
+					);
 
-					let sendData = {
-
+					window.axios.post('/appointments',
+					{
 						title: this.title,
 						description: this.description,
-						resource_id: this.resource_id,
-						start: this.showTimes ? moment(this.start).format() : null,
-						end: this.showTimes ? moment(this.end).format() : null
-					}
-
-					window.axios.post('/appointments/add', sendData)
+						start: moment(this.start).format(),
+						end: moment(this.end).format(),
+						resource_id: this.resource_id
+					})
 					.then((response) => {
 						// Close the modal
 						self.$emit('close');

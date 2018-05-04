@@ -24,5 +24,7 @@ Route::get('/resources', 'ResourceController@index');
 Route::post('/resources', 'ResourceController@add');
 
 //Resource
-Route::get('/appointments', 'AppointmentController@index');
 Route::post('/appointments', 'AppointmentController@index');
+Route::post('/appointments/add', 'AppointmentController@add');
+Route::get('/appointments/{id}', 'AppointmentController@view');
+Route::put('/appointments/{id}', 'AppointmentController@update');

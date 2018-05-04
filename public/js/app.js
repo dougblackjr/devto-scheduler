@@ -46438,16 +46438,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_full_calendar__ = __webpack_require__(198);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullcalendar_scheduler__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_fullcalendar_scheduler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_fullcalendar_scheduler__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullcalendar_dist_fullcalendar_min_css__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fullcalendar_dist_fullcalendar_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_fullcalendar_dist_fullcalendar_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fullcalendar_scheduler_dist_scheduler_min_css__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fullcalendar_scheduler_dist_scheduler_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_fullcalendar_scheduler_dist_scheduler_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_toastr_build_toastr_min_css__ = __webpack_require__(238);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_toastr_build_toastr_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_toastr_build_toastr_min_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_js_toggle_button__ = __webpack_require__(258);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_js_toggle_button___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_js_toggle_button__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fullcalendar_dist_fullcalendar_min_css__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fullcalendar_dist_fullcalendar_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_fullcalendar_dist_fullcalendar_min_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_fullcalendar_scheduler_dist_scheduler_min_css__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_fullcalendar_scheduler_dist_scheduler_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_fullcalendar_scheduler_dist_scheduler_min_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_toastr_build_toastr_min_css__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_toastr_build_toastr_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_toastr_build_toastr_min_css__);
 __webpack_require__(169);
 
 // Dependencies
 window.Vue = __webpack_require__(195);
+
 
 
 var moment = __webpack_require__(0);
@@ -46460,7 +46463,9 @@ var moment = __webpack_require__(0);
 // Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('modal', __webpack_require__(240));
 Vue.component('apptmodal', __webpack_require__(246));
+Vue.component('viewmodal', __webpack_require__(259));
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_full_calendar__["a" /* default */]);
+Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_js_toggle_button___default.a);
 
 var app = new Vue({
 	el: '#app',
@@ -46470,6 +46475,12 @@ var app = new Vue({
 		return {
 			showModal: false,
 			showApptModal: false,
+			showViewModal: false,
+			selectedTitle: '',
+			selectedDescription: '',
+			selectedResourceId: '',
+			selectedStart: '',
+			selectedEnd: '',
 			allResourceInfo: {},
 			eventSources: [{
 				events: function events(start, end, timezone, callback) {
@@ -46477,7 +46488,6 @@ var app = new Vue({
 						startDate: start,
 						endDate: end
 					}).then(function (response) {
-						console.log(response.data);
 						callback(response.data);
 					});
 				}
@@ -46487,7 +46497,6 @@ var app = new Vue({
 				resourceLabelText: "Rooms",
 				resources: function resources(callback, start, end, timezone) {
 					window.axios.get('/resources').then(function (response) {
-						console.log(response.data);
 						self.allResourceInfo = response.data;
 						callback(response.data);
 					});
@@ -46511,6 +46520,14 @@ var app = new Vue({
 					left: "promptResource addAppt today prev,next",
 					center: "title",
 					right: "agendaDay,timelineDay,agendaWeek,month"
+				},
+				select: function select(start, end, jsEvent, view, resource) {
+
+					self.selectedStart = start.format();
+					self.selectedEnd = end.format();
+					self.selectedResourceId = resource.id;
+					console.log(self.selectedStart, self.selectedEnd, start, end, resource);
+					self.toggleApptModal();
 				}
 			}
 		};
@@ -46527,7 +46544,6 @@ var app = new Vue({
 		},
 		broadcastResource: function broadcastResource(resource) {},
 		refreshEvents: function refreshEvents() {
-			console.log('REFETCHING');
 
 			$('#calendar').fullCalendar('refetchResources');
 			$('#calendar').fullCalendar('refetchEvents');
@@ -46618,12 +46634,12 @@ if (token) {
 
 window.Pusher = __webpack_require__(194);
 
-window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
-  broadcaster: 'pusher',
-  key: "3710505f80a518761294",
-  cluster: "us2",
-  encrypted: true
-});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     encrypted: true
+// });
 
 /***/ }),
 /* 170 */
@@ -95666,7 +95682,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-mask[data-v-56e7fa5a] {\n\tposition: fixed;\n\tz-index: 9998;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbackground-color: rgba(0, 0, 0, .5);\n\tdisplay: table;\n\t-webkit-transition: opacity .3s ease;\n\ttransition: opacity .3s ease;\n}\n.modal-wrapper[data-v-56e7fa5a] {\n\tdisplay: table-cell;\n\tvertical-align: middle;\n}\n.modal-container[data-v-56e7fa5a] {\n\twidth: 400px;\n\tmargin: 0px auto;\n\tpadding: 20px 30px;\n\tbackground-color: #fff;\n\tborder-radius: 2px;\n\t-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t-webkit-transition: all .3s ease;\n\ttransition: all .3s ease;\n\tfont-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-56e7fa5a] {\n\tmargin-top: 0;\n\tcolor: #42b983;\n}\n.modal-body[data-v-56e7fa5a] {\n\tmargin: 20px 0;\n}\n.modal-default-button[data-v-56e7fa5a] {\n\tfloat: right;\n}\n.modal-success-button[data-v-56e7fa5a] {\n\tfloat: left;\n}\n.modal-enter[data-v-56e7fa5a] {\n\topacity: 0;\n}\n.modal-leave-active[data-v-56e7fa5a] {\n\topacity: 0;\n}\n.modal-enter .modal-container[data-v-56e7fa5a],\n.modal-leave-active .modal-container[data-v-56e7fa5a] {\n\t-webkit-transform: scale(1.1);\n\ttransform: scale(1.1);\n}\n", ""]);
+exports.push([module.i, "\n.modal-mask[data-v-56e7fa5a] {\n\tposition: fixed;\n\tz-index: 9998;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbackground-color: rgba(0, 0, 0, .5);\n\tdisplay: table;\n\t-webkit-transition: opacity .3s ease;\n\ttransition: opacity .3s ease;\n}\n.modal-wrapper[data-v-56e7fa5a] {\n\tdisplay: table-cell;\n\tvertical-align: middle;\n}\n.modal-container[data-v-56e7fa5a] {\n\twidth: calc(100% - 200px);\n\tmargin: 0px auto;\n\tpadding: 20px 30px;\n\tbackground-color: #fff;\n\tborder-radius: 2px;\n\t-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t-webkit-transition: all .3s ease;\n\ttransition: all .3s ease;\n\tfont-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-56e7fa5a] {\n\tmargin-top: 0;\n\tcolor: #42b983;\n}\n.modal-body[data-v-56e7fa5a] {\n\tmargin: 20px 0;\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: justify;\n\t    -ms-flex-pack: justify;\n\t        justify-content: space-between;\n}\n.modal-body-left[data-v-56e7fa5a], .modal-body-right[data-v-56e7fa5a] {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\twidth: 40%;\n}\n.modal-default-button[data-v-56e7fa5a] {\n\tfloat: right;\n}\n.modal-success-button[data-v-56e7fa5a] {\n\tfloat: left;\n}\n.modal-enter[data-v-56e7fa5a] {\n\topacity: 0;\n}\n.modal-leave-active[data-v-56e7fa5a] {\n\topacity: 0;\n}\n.modal-enter .modal-container[data-v-56e7fa5a],\n.modal-leave-active .modal-container[data-v-56e7fa5a] {\n\t-webkit-transform: scale(1.1);\n\ttransform: scale(1.1);\n}\n", ""]);
 
 // exports
 
@@ -95723,39 +95739,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var moment = __webpack_require__(0);
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: { datetime: __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default.a },
-	props: ['showApptModal', 'res'],
+	props: ['showApptModal', 'res', 'intitle', 'indescription', 'instart', 'inend', 'inresourceid'],
 	data: function data() {
 		return {
-			title: '',
-			description: '',
-			start: '',
-			end: '',
-			resource_id: 0,
-			resources: this.res
+			title: this.intitle,
+			description: this.indescription,
+			start: this.instart,
+			end: this.inend,
+			resource_id: this.inresourceid,
+			resources: this.res,
+			showTimes: true
 		};
 	},
 
 	methods: {
-		submit: function submit() {
-			// Get the title
-			// this.title = submitEvent.target.elements.resourceTitle.value
+		submitAppointment: function submitAppointment() {
+			var _this = this;
 
-			// CLose the modal
-			this.$emit('close');
+			var self = this;
 
 			// Submit
 			if (this.title != '') {
-				$('#calendar').fullCalendar('addResource', { title: this.title }, true);
 
-				window.axios.post('/resources', {
-					title: this.title
-				}).then(function (response) {
+				var sendData = {
+
+					title: this.title,
+					description: this.description,
+					resource_id: this.resource_id,
+					start: this.showTimes ? moment(this.start).format() : null,
+					end: this.showTimes ? moment(this.end).format() : null
+				};
+
+				window.axios.post('/appointments/add', sendData).then(function (response) {
+					// Close the modal
+					self.$emit('close');
 					window.toastr.info('Resource added');
+					_this.$parent.$options.methods.refreshEvents();
 				});
 			}
 		}
@@ -96534,114 +96569,1404 @@ var render = function() {
                 { staticClass: "modal-body" },
                 [
                   _vm._t("body", [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.title,
-                          expression: "title"
-                        }
-                      ],
-                      attrs: {
-                        type: "text",
-                        name: "apptTitle",
-                        placeholder: "Your appt title"
-                      },
-                      domProps: { value: _vm.title },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.title = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.description,
-                          expression: "description"
-                        }
-                      ],
-                      attrs: {
-                        type: "text",
-                        name: "apptDescription",
-                        placeholder: "Your appt description"
-                      },
-                      domProps: { value: _vm.description },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.description = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("datetime", {
-                      attrs: { format: "MM/DD/YYYY", width: "300px" },
-                      model: {
-                        value: _vm.start,
-                        callback: function($$v) {
-                          _vm.start = $$v
-                        },
-                        expression: "start"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("datetime", {
-                      attrs: { format: "MM/DD/YYYY", width: "300px" },
-                      model: {
-                        value: _vm.end,
-                        callback: function($$v) {
-                          _vm.end = $$v
-                        },
-                        expression: "end"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "select",
-                      {
+                    _c("div", { staticClass: "modal-body-left" }, [
+                      _c("input", {
                         directives: [
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.resource_id,
-                            expression: "resource_id"
+                            value: _vm.title,
+                            expression: "title"
                           }
                         ],
+                        attrs: {
+                          type: "text",
+                          name: "apptTitle",
+                          placeholder: "Your appt title"
+                        },
+                        domProps: { value: _vm.title },
                         on: {
-                          change: function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.title = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.description,
+                            expression: "description"
+                          }
+                        ],
+                        attrs: {
+                          type: "text",
+                          name: "apptDescription",
+                          placeholder: "Your appt description"
+                        },
+                        domProps: { value: _vm.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.description = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", { attrs: { for: "apptResource" } }, [
+                        _vm._v("Resource")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.resource_id,
+                              expression: "resource_id"
+                            }
+                          ],
+                          attrs: { name: "apptResource" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.resource_id = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        _vm._l(_vm.resources, function(t) {
+                          return _c("option", { domProps: { value: t.id } }, [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t\t\t" +
+                                _vm._s(t.title) +
+                                "\n\t\t\t\t\t\t\t\t\t"
+                            )
+                          ])
+                        })
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-body-right" },
+                      [
+                        _c("label", [_vm._v("Schedule Now or Later")]),
+                        _vm._v(" "),
+                        _c("toggle-button", {
+                          attrs: {
+                            value: true,
+                            labels: { checked: "Now", unchecked: "Later" },
+                            height: "45",
+                            width: "75"
+                          },
+                          model: {
+                            value: _vm.showTimes,
+                            callback: function($$v) {
+                              _vm.showTimes = $$v
+                            },
+                            expression: "showTimes"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.showTimes
+                          ? _c("div", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.start,
+                                    expression: "start"
+                                  }
+                                ],
+                                attrs: { type: "datetime-local" },
+                                domProps: { value: _vm.start },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.start = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.end,
+                                    expression: "end"
+                                  }
+                                ],
+                                attrs: { type: "datetime-local" },
+                                domProps: { value: _vm.end },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.end = $event.target.value
+                                  }
+                                }
                               })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.resource_id = $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
+                            ])
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-footer" },
+                [
+                  _vm._t("footer", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "modal-success-button",
+                        attrs: { type: "submit" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.submitAppointment()
                           }
                         }
                       },
-                      _vm._l(_vm.resources, function(t) {
-                        return _c("option", { domProps: { value: t.id } }, [
-                          _vm._v(
-                            "\n\t\t\t\t\t\t\t\t\t" +
-                              _vm._s(t.title) +
-                              "\n\t\t\t\t\t\t\t\t"
-                          )
-                        ])
-                      })
+                      [_vm._v("\n\t\t\t\t\t\t\t\tSubmit\n\t\t\t\t\t\t\t")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "modal-default-button",
+                        attrs: { type: "cancel" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.$emit("close")
+                          }
+                        }
+                      },
+                      [_vm._v("\n\t\t\t\t\t\t\t\tClose\n\t\t\t\t\t\t\t")]
+                    )
+                  ])
+                ],
+                2
+              )
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-56e7fa5a", module.exports)
+  }
+}
+
+/***/ }),
+/* 256 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 257 */,
+/* 258 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory(__webpack_require__(195));
+	else if(typeof define === 'function' && define.amd)
+		define(["vue"], factory);
+	else if(typeof exports === 'object')
+		exports["vue-js-toggle-button"] = factory(require("vue"));
+	else
+		root["vue-js-toggle-button"] = factory(root["vue"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/dist/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(8)
+
+var Component = __webpack_require__(6)(
+  /* script */
+  __webpack_require__(2),
+  /* template */
+  __webpack_require__(7),
+  /* scopeId */
+  "data-v-25adc6c0",
+  /* cssModules */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var constants = {
+  colorChecked: '#75C791',
+  colorUnchecked: '#bfcbd9',
+  cssColors: false,
+  labelChecked: 'on',
+  labelUnchecked: 'off',
+  width: 50,
+  height: 22,
+  margin: 3,
+  switchColor: '#fff'
+};
+
+var contains = function contains(object, title) {
+  return (typeof object === 'undefined' ? 'undefined' : _typeof(object)) === 'object' && object.hasOwnProperty(title);
+};
+
+var px = function px(v) {
+  return v + 'px';
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'ToggleButton',
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    sync: {
+      type: Boolean,
+      default: false
+    },
+    speed: {
+      type: Number,
+      default: 300
+    },
+    color: {
+      type: [String, Object],
+      validator: function validator(value) {
+        return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value.checked || value.unchecked : typeof value === 'string';
+      }
+    },
+    switchColor: {
+      type: [String, Object],
+      validator: function validator(value) {
+        return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value.checked || value.unchecked : typeof value === 'string';
+      }
+    },
+    cssColors: {
+      type: Boolean,
+      default: false
+    },
+    labels: {
+      type: [Boolean, Object],
+      default: false,
+      validator: function validator(value) {
+        return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value.checked || value.unchecked : typeof value === 'boolean';
+      }
+    },
+    height: {
+      type: Number,
+      default: constants.height
+    },
+    width: {
+      type: Number,
+      default: constants.width
+    }
+  },
+  computed: {
+    className: function className() {
+      var toggled = this.toggled,
+          disabled = this.disabled;
+
+
+      return ['vue-js-switch', { toggled: toggled, disabled: disabled }];
+    },
+    ariaChecked: function ariaChecked() {
+      return this.toggled.toString();
+    },
+    coreStyle: function coreStyle() {
+      return {
+        width: px(this.width),
+        height: px(this.height),
+        backgroundColor: this.cssColors ? null : this.colorCurrent,
+        borderRadius: px(Math.round(this.height / 2))
+      };
+    },
+    buttonRadius: function buttonRadius() {
+      return this.height - constants.margin * 2;
+    },
+    distance: function distance() {
+      return px(this.width - this.height + constants.margin);
+    },
+    buttonStyle: function buttonStyle() {
+      return {
+        width: px(this.buttonRadius),
+        height: px(this.buttonRadius),
+        transition: 'transform ' + this.speed + 'ms',
+        transform: this.toggled ? 'translate3d(' + this.distance + ', 3px, 0px)' : null,
+        background: this.switchColor ? this.switchColorCurrent : undefined
+      };
+    },
+    labelStyle: function labelStyle() {
+      return {
+        lineHeight: px(this.height)
+      };
+    },
+    colorChecked: function colorChecked() {
+      var color = this.color;
+
+
+      if ((typeof color === 'undefined' ? 'undefined' : _typeof(color)) !== 'object') {
+        return color || constants.colorChecked;
+      }
+
+      return contains(color, 'checked') ? color.checked : constants.colorChecked;
+    },
+    colorUnchecked: function colorUnchecked() {
+      var color = this.color;
+
+
+      return contains(color, 'unchecked') ? color.unchecked : constants.colorUnchecked;
+    },
+    colorCurrent: function colorCurrent() {
+      return this.toggled ? this.colorChecked : this.colorUnchecked;
+    },
+    labelChecked: function labelChecked() {
+      return contains(this.labels, 'checked') ? this.labels.checked : constants.labelChecked;
+    },
+    labelUnchecked: function labelUnchecked() {
+      return contains(this.labels, 'unchecked') ? this.labels.unchecked : constants.labelUnchecked;
+    },
+    switchColorChecked: function switchColorChecked() {
+      var switchColor = this.switchColor;
+
+
+      return contains(switchColor, 'checked') ? switchColor.checked : constants.switchColor;
+    },
+    switchColorUnchecked: function switchColorUnchecked() {
+      var switchColor = this.switchColor;
+
+
+      return contains(switchColor, 'unchecked') ? switchColor.unchecked : constants.switchColor;
+    },
+    switchColorCurrent: function switchColorCurrent() {
+      var switchColor = this.switchColor;
+
+
+      if ((typeof switchColor === 'undefined' ? 'undefined' : _typeof(switchColor)) !== 'object') {
+        return switchColor || constants.switchColor;
+      }
+
+      return this.toggled ? this.switchColorChecked : this.switchColorUnchecked;
+    }
+  },
+  watch: {
+    value: function value(_value) {
+      if (this.sync) {
+        this.toggled = !!_value;
+      }
+    }
+  },
+  data: function data() {
+    return {
+      toggled: !!this.value
+    };
+  },
+
+  methods: {
+    toggle: function toggle(event) {
+      this.toggled = !this.toggled;
+      this.$emit('input', this.toggled);
+      this.$emit('change', {
+        value: this.toggled,
+        srcEvent: event
+      });
+    }
+  }
+});
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Button_vue__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Button_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Button_vue__);
+
+
+
+var plugin = {
+  install: function install(Vue, options) {
+    Vue.component('ToggleButton', __WEBPACK_IMPORTED_MODULE_1__Button_vue___default.a);
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)();
+// imports
+
+
+// module
+exports.push([module.i, ".vue-js-switch[data-v-25adc6c0]{display:inline-block;position:relative;overflow:hidden;vertical-align:middle;user-select:none;font-size:10px;cursor:pointer}.vue-js-switch .v-switch-input[data-v-25adc6c0]{display:none}.vue-js-switch .v-switch-label[data-v-25adc6c0]{position:absolute;top:0;font-weight:600;color:#fff}.vue-js-switch .v-switch-label.v-left[data-v-25adc6c0]{left:10px}.vue-js-switch .v-switch-label.v-right[data-v-25adc6c0]{right:10px}.vue-js-switch .v-switch-core[data-v-25adc6c0]{display:block;position:relative;box-sizing:border-box;outline:0;margin:0;transition:border-color .3s,background-color .3s;user-select:none}.vue-js-switch .v-switch-core .v-switch-button[data-v-25adc6c0]{display:block;position:absolute;overflow:hidden;top:0;left:0;transform:translate3d(3px,3px,0);border-radius:100%;background-color:#fff}.vue-js-switch.disabled[data-v-25adc6c0]{pointer-events:none;opacity:.6}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+// this module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  scopeId,
+  cssModules
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  // inject cssModules
+  if (cssModules) {
+    var computed = Object.create(options.computed || null)
+    Object.keys(cssModules).forEach(function (key) {
+      var module = cssModules[key]
+      computed[key] = function () { return module }
+    })
+    options.computed = computed
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('label', {
+    class: _vm.className,
+    attrs: {
+      "role": "checkbox",
+      "aria-checked": _vm.ariaChecked
+    }
+  }, [_c('input', {
+    staticClass: "v-switch-input",
+    attrs: {
+      "type": "checkbox"
+    },
+    on: {
+      "change": function($event) {
+        $event.stopPropagation();
+        _vm.toggle($event)
+      }
+    }
+  }), _vm._v(" "), _c('div', {
+    staticClass: "v-switch-core",
+    style: (_vm.coreStyle)
+  }, [_c('div', {
+    staticClass: "v-switch-button",
+    style: (_vm.buttonStyle)
+  })]), _vm._v(" "), (_vm.labels) ? [(_vm.toggled) ? _c('span', {
+    staticClass: "v-switch-label v-left",
+    style: (_vm.labelStyle),
+    domProps: {
+      "innerHTML": _vm._s(_vm.labelChecked)
+    }
+  }) : _c('span', {
+    staticClass: "v-switch-label v-right",
+    style: (_vm.labelStyle),
+    domProps: {
+      "innerHTML": _vm._s(_vm.labelUnchecked)
+    }
+  })] : _vm._e()], 2)
+},staticRenderFns: []}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(4);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(9)("2283861f", content, true);
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(10)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction) {
+  isProduction = _isProduction
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[data-vue-ssr-id~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ })
+/******/ ]);
+});
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 259 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(260)
+}
+var normalizeComponent = __webpack_require__(7)
+/* script */
+var __vue_script__ = __webpack_require__(262)
+/* template */
+var __vue_template__ = __webpack_require__(263)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-b30eaa3e"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ViewModal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b30eaa3e", Component.options)
+  } else {
+    hotAPI.reload("data-v-b30eaa3e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 260 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(261);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(23)("4df8e5c4", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b30eaa3e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ViewModal.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b30eaa3e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ViewModal.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 261 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(5)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.modal-mask[data-v-b30eaa3e] {\n\tposition: fixed;\n\tz-index: 9998;\n\ttop: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\tbackground-color: rgba(0, 0, 0, .5);\n\tdisplay: table;\n\t-webkit-transition: opacity .3s ease;\n\ttransition: opacity .3s ease;\n}\n.modal-wrapper[data-v-b30eaa3e] {\n\tdisplay: table-cell;\n\tvertical-align: middle;\n}\n.modal-container[data-v-b30eaa3e] {\n\twidth: calc(100% - 200px);\n\tmargin: 0px auto;\n\tpadding: 20px 30px;\n\tbackground-color: #fff;\n\tborder-radius: 2px;\n\t-webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);\n\t-webkit-transition: all .3s ease;\n\ttransition: all .3s ease;\n\tfont-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3[data-v-b30eaa3e] {\n\tmargin-top: 0;\n\tcolor: #42b983;\n}\n.modal-body[data-v-b30eaa3e] {\n\tmargin: 20px 0;\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: justify;\n\t    -ms-flex-pack: justify;\n\t        justify-content: space-between;\n}\n.modal-body-left[data-v-b30eaa3e], .modal-body-right[data-v-b30eaa3e] {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\twidth: 40%;\n}\n.modal-default-button[data-v-b30eaa3e] {\n\tfloat: right;\n}\n.modal-success-button[data-v-b30eaa3e] {\n\tfloat: left;\n}\n.modal-enter[data-v-b30eaa3e] {\n\topacity: 0;\n}\n.modal-leave-active[data-v-b30eaa3e] {\n\topacity: 0;\n}\n.modal-enter .modal-container[data-v-b30eaa3e],\n.modal-leave-active .modal-container[data-v-b30eaa3e] {\n\t-webkit-transform: scale(1.1);\n\ttransform: scale(1.1);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 262 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker__ = __webpack_require__(250);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	components: { datetime: __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default.a },
+	props: ['showApptModal', 'res'],
+	data: function data() {
+		return {
+			title: '',
+			description: '',
+			start: '',
+			end: '',
+			resource_id: 0,
+			resources: this.res,
+			showTimes: true
+		};
+	},
+
+	methods: {
+		submit: function submit() {
+			var _this = this;
+
+			var self = this;
+
+			// Submit
+			if (this.title != '') {
+				$('#calendar').fullCalendar('addResource', { title: this.title }, true);
+
+				window.axios.post('/appointments', {
+					title: this.title,
+					description: this.description,
+					start: moment(this.start).format(),
+					end: moment(this.end).format(),
+					resource_id: this.resource_id
+				}).then(function (response) {
+					// Close the modal
+					self.$emit('close');
+					window.toastr.info('Resource added');
+					_this.$parent.$options.methods.refreshEvents();
+				});
+			}
+		}
+	},
+	mounted: function mounted() {
+		console.log('APpt Modal is on!');
+		console.log('props', this.resources);
+	}
+});
+
+/***/ }),
+/* 263 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "modal-mask", attrs: { transition: "modal" } },
+    [
+      _c("div", { staticClass: "modal-mask" }, [
+        _c("div", { staticClass: "modal-wrapper" }, [
+          _c("div", { staticClass: "modal-container" }, [
+            _c("form", [
+              _c(
+                "div",
+                { staticClass: "modal-header" },
+                [
+                  _vm._t("header", [
+                    _vm._v("\n\t\t\t\t\t\t\tEdit Appointment\n\t\t\t\t\t\t")
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body" },
+                [
+                  _vm._t("body", [
+                    _c("div", { staticClass: "modal-body-left" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.title,
+                            expression: "title"
+                          }
+                        ],
+                        attrs: {
+                          type: "text",
+                          name: "apptTitle",
+                          placeholder: "Your appt title"
+                        },
+                        domProps: { value: _vm.title },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.title = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.description,
+                            expression: "description"
+                          }
+                        ],
+                        attrs: {
+                          type: "text",
+                          name: "apptDescription",
+                          placeholder: "Your appt description"
+                        },
+                        domProps: { value: _vm.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.description = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", { attrs: { for: "apptResource" } }, [
+                        _vm._v("Resource")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.resource_id,
+                              expression: "resource_id"
+                            }
+                          ],
+                          attrs: { name: "apptResource" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.resource_id = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        _vm._l(_vm.resources, function(t) {
+                          return _c("option", { domProps: { value: t.id } }, [
+                            _vm._v(
+                              "\n\t\t\t\t\t\t\t\t\t\t" +
+                                _vm._s(t.title) +
+                                "\n\t\t\t\t\t\t\t\t\t"
+                            )
+                          ])
+                        })
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-body-right" },
+                      [
+                        _c("toggle-button", {
+                          attrs: {
+                            value: true,
+                            labels: { checked: "Now", unchecked: "Later" }
+                          },
+                          model: {
+                            value: _vm.showTimes,
+                            callback: function($$v) {
+                              _vm.showTimes = $$v
+                            },
+                            expression: "showTimes"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.showTimes
+                          ? _c(
+                              "div",
+                              [
+                                _c("datetime", {
+                                  attrs: { type: "datetime", width: "300" },
+                                  model: {
+                                    value: _vm.start,
+                                    callback: function($$v) {
+                                      _vm.start = $$v
+                                    },
+                                    expression: "start"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("datetime", {
+                                  attrs: { type: "datetime", width: "300" },
+                                  model: {
+                                    value: _vm.end,
+                                    callback: function($$v) {
+                                      _vm.end = $$v
+                                    },
+                                    expression: "end"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          : _vm._e()
+                      ],
+                      1
                     )
                   ])
                 ],
@@ -96699,15 +98024,9 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-56e7fa5a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-b30eaa3e", module.exports)
   }
 }
-
-/***/ }),
-/* 256 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

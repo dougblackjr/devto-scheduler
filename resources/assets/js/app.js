@@ -4,6 +4,7 @@ require('./bootstrap');
 window.Vue = require('vue')
 import FullCalendar from 'vue-full-calendar'
 import 'fullcalendar-scheduler'
+import ToggleButton from 'vue-js-toggle-button'
 const moment = require('moment');
 
 // Stylesheets
@@ -14,7 +15,9 @@ import 'toastr/build/toastr.min.css';
 // Vue.component('example-component', require('./components/ExampleComponent.vue'))
 Vue.component('modal', require('./components/Modal.vue'))
 Vue.component('apptmodal', require('./components/ApptModal.vue'))
+Vue.component('viewmodal', require('./components/ViewModal.vue'))
 Vue.use(FullCalendar)
+Vue.use(ToggleButton)
 
 const app = new Vue({
 	el: '#app',
@@ -24,6 +27,12 @@ const app = new Vue({
 		return {
 			showModal: false,
 			showApptModal: false,
+			showViewModal: false,
+			selectedTitle: '',
+			selectedDescription: '',
+			selectedResourceId: '',
+			selectedStart: '',
+			selectedEnd: '',
 			allResourceInfo: {},
 			eventSources: [
 			{
@@ -33,7 +42,6 @@ const app = new Vue({
 						endDate: end
 					})
 					.then((response) => {
-						console.log(response.data)
 						callback(response.data)
 					})
 				}
@@ -44,7 +52,6 @@ const app = new Vue({
 				resources: function(callback, start, end, timezone) {
 					window.axios.get('/resources')
 						.then((response) => {
-							console.log(response.data)
 							self.allResourceInfo = response.data
 							callback(response.data)
 						}
@@ -70,6 +77,15 @@ const app = new Vue({
 					center: "title",
 					right: "agendaDay,timelineDay,agendaWeek,month"
 				},
+				select: function (start, end, jsEvent, view, resource) {
+
+					self.selectedStart = start.format()
+					self.selectedEnd = end.format()
+					self.selectedResourceId = resource.id
+					console.log(self.selectedStart, self.selectedEnd, start, end, resource)
+					self.toggleApptModal();
+
+				},
 			}
 		}
 	},
@@ -88,7 +104,6 @@ const app = new Vue({
 			
 		},
 		refreshEvents() {
-			console.log('REFETCHING')
 
 			$('#calendar').fullCalendar('refetchResources');
 			$('#calendar').fullCalendar('refetchEvents');
