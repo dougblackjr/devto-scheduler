@@ -88,8 +88,11 @@ const app = new Vue({
 			
 		},
 		refreshEvents() {
-			this.$refs.calendar.$emit('refetch-events')
-			this.$refs.calendar.$emit('refetch-resources')
+			console.log('REFETCHING')
+
+			$('#calendar').fullCalendar('refetchResources');
+			$('#calendar').fullCalendar('refetchEvents');
+
 		},
 
 		removeEvent() {
@@ -115,6 +118,11 @@ const app = new Vue({
 
 	computed: {
 		
+	},
+
+	mounted() {
+		console.log(this)
+		console.log(this.$refs)
 	}
 
 });
