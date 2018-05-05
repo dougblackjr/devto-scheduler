@@ -130,8 +130,21 @@ const app = new Vue({
 					self.selectedResourceId = resourceId
 					self.toggleApptModal();
 
-					
 				},
+				eventResize: function( event, jsEvent, ui, view ) {
+					console.log('RESUZE')
+					window.axios.put('/appointments/' + event.id,
+						{
+							title: event.title,
+							description: event.description,
+							resource_id: event.resourceId,
+							start: event.start.format(),
+							end: event.end.format()
+						})
+					.then((response) => {
+						toastr.info('Appointment updated');
+					})
+				}
 			}
 		}
 	},

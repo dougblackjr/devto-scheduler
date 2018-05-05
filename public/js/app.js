@@ -46566,6 +46566,18 @@ var app = new Vue({
 					self.selectedEnd = date.format('YYYY-MM-DD\THH:mm:SS');
 					self.selectedResourceId = resourceId;
 					self.toggleApptModal();
+				},
+				eventResize: function eventResize(event, jsEvent, ui, view) {
+					console.log('RESUZE');
+					window.axios.put('/appointments/' + event.id, {
+						title: event.title,
+						description: event.description,
+						resource_id: event.resourceId,
+						start: event.start.format(),
+						end: event.end.format()
+					}).then(function (response) {
+						toastr.info('Appointment updated');
+					});
 				}
 			}
 		};
