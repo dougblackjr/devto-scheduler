@@ -8,6 +8,7 @@ use App\Appointment;
 use Auth;
 use Cake\Chronos\Chronos;
 use Carbon\Carbon;
+use App\Events\UpdateWaitlistEvent;
 
 class AppointmentController extends Controller
 {
@@ -28,6 +29,11 @@ class AppointmentController extends Controller
 			'end' => !is_null($request->end) ? new Carbon($request->end) : null,
 			'resource_id' => $request->resource_id
 		]);
+
+		if(is_null($request->start) || $is_null($request->end)) {
+
+			event(new UpdateWaitlistEvent($resource->toArray()));
+		}
 
 		return response()->json($resource);
 
