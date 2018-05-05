@@ -1,4 +1,4 @@
-<template id="modal-template">
+<template id="view-modal">
 	<div class="modal-mask" transition="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper">
@@ -36,7 +36,7 @@
 						<div class="modal-footer">
 							<slot name="footer">
 								<button type="submit" class="modal-success-button" @click.prevent="submit()">
-									Submit
+									Edit
 								</button>
 								<button type="cancel" class="modal-default-button" @click.prevent="$emit('close')">
 									Close
@@ -57,15 +57,22 @@
 		components: {datetime},
 		props: [
 			'showApptModal',
-			'res'
+			'res',
+			'inid',
+			'intitle',
+			'indescription',
+			'instart',
+			'inend',
+			'inresourceid'
 		],
 		data() {
 			return {
-				title: '',
-				description: '',
-				start: '',
-				end: '',
-				resource_id: 0,
+				id: this.inid,
+				title: this.intitle,
+				description: this.indescription,
+				start: this.instart,
+				end: this.inend,
+				resource_id: this.inresourceid,
 				resources: this.res,
 				showTimes: true
 			}
@@ -75,33 +82,24 @@
 				let self = this
 
 				// Submit
-				if (this.title != '') {
-					$('#calendar').fullCalendar(
-						'addResource',
-						{ title: this.title },
-						true
-					);
-
-					window.axios.post('/appointments',
-					{
-						title: this.title,
-						description: this.description,
-						start: moment(this.start).format(),
-						end: moment(this.end).format(),
-						resource_id: this.resource_id
-					})
-					.then((response) => {
-						// Close the modal
-						self.$emit('close');
-						window.toastr.info('Resource added')
-						this.$parent.$options.methods.refreshEvents()
-					})
-				}
+				window.axios.put('/appointments/' + this.id,
+				{
+					title: this.title,
+					description: this.description,
+					start: moment(this.start).format(),
+					end: moment(this.end).format(),
+					resource_id: this.resource_id
+				})
+				.then((response) => {
+					// Close the modal
+					self.$emit('close');
+					window.toastr.info('Resource edited')
+					this.$parent.$options.methods.refreshEvents()
+				})
 			}
 		},
 		mounted() {
-			console.log('APpt Modal is on!')
-			console.log('props', this.resources)
+			console.log('View Modal is on!')
 		}
 	}
 </script>

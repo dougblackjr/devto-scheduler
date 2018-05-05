@@ -28,6 +28,7 @@ const app = new Vue({
 			showModal: false,
 			showApptModal: false,
 			showViewModal: false,
+			selectedId: 0,
 			selectedTitle: '',
 			selectedDescription: '',
 			selectedResourceId: '',
@@ -82,8 +83,23 @@ const app = new Vue({
 					self.selectedStart = start.format()
 					self.selectedEnd = end.format()
 					self.selectedResourceId = resource.id
-					console.log(self.selectedStart, self.selectedEnd, start, end, resource)
 					self.toggleApptModal();
+
+				},
+				eventClick: function(calEvent, jsEvent, view) {
+					window.axios.get('/appointments/' + calEvent.id)
+						.then((response) => {
+							console.log('HUURR', response.data)
+							self.selectedId = response.data.id
+							self.selectedTitle = response.data.title
+							self.selectedStart = response.data.start
+							self.selectedEnd = response.data.end
+							self.selectedResourceId = response.data.resource_id
+							self.selectedDescription = response.data.description
+						})
+						.then((data) => {
+							self.showViewModal = true
+						})
 
 				},
 			}
@@ -100,7 +116,7 @@ const app = new Vue({
 			this.showApptModal = !this.showApptModal
 
 		},
-		broadcastResource(resource) {
+		lockTimeSlot(start, end, resourceId) {
 			
 		},
 		refreshEvents() {
@@ -136,8 +152,7 @@ const app = new Vue({
 	},
 
 	mounted() {
-		console.log(this)
-		console.log(this.$refs)
+		console.log('App mounted')
 	}
 
 });

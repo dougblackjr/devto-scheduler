@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 	<div class="row justify-content-center">
-		<div class="col-md-12">
+		<div class="col-md-9">
 			<div class="card">
 				<div class="card-header">Calendar</div>
 
@@ -28,9 +28,24 @@
 					</apptmodal>
 					<viewmodal
 						:res="allResourceInfo"
+						:res="allResourceInfo"
+						:inid="selectedId"
+						:intitle="selectedTitle"
+						:indescription="selectedDescription"
+						:instart="selectedStart"
+						:inend="selectedEnd"
+						:inresourceid="selectedResourceId"
 						v-if="showViewModal"
 						@close="showViewModal = false">
 					</apptmodal>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="card">
+				<div class="card-header">Wait List</div>
+				<div class="card-body">
+
 				</div>
 			</div>
 		</div>

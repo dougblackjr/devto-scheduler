@@ -24,8 +24,8 @@ class AppointmentController extends Controller
 		$resource = Appointment::create([
 			'title' => $request->title,
 			'description' => $request->description,
-			'start' => new Carbon($request->start),
-			'end' => new Carbon($request->end),
+			'start' => !is_null($request->start) ? new Carbon($request->start) : null,
+			'end' => !is_null($request->end) ? new Carbon($request->end) : null,
 			'resource_id' => $request->resource_id
 		]);
 
@@ -38,7 +38,7 @@ class AppointmentController extends Controller
 
 		$appt = Appointment::where('id', $id)->first();
 
-		return $response->json($appt);
+		return response()->json($appt);
 
 	}
 
@@ -52,14 +52,14 @@ class AppointmentController extends Controller
 			[
 				'title' => $request->title,
 				'description' => $request->description,
-				'start' => new Carbon($request->start),
-				'end' => new Carbon($request->end),
+				'start' => !is_null($request->start) ? new Carbon($request->start) : null,
+				'end' => !is_null($request->end) ? new Carbon($request->end) : null,
 				'resource_id' => $request->resource_id
 			]
 
 		);
 
-		return $response->json($appt);
+		return response()->json($appt);
 
 	}
 

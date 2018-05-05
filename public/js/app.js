@@ -46476,6 +46476,7 @@ var app = new Vue({
 			showModal: false,
 			showApptModal: false,
 			showViewModal: false,
+			selectedId: 0,
 			selectedTitle: '',
 			selectedDescription: '',
 			selectedResourceId: '',
@@ -46526,8 +46527,20 @@ var app = new Vue({
 					self.selectedStart = start.format();
 					self.selectedEnd = end.format();
 					self.selectedResourceId = resource.id;
-					console.log(self.selectedStart, self.selectedEnd, start, end, resource);
 					self.toggleApptModal();
+				},
+				eventClick: function eventClick(calEvent, jsEvent, view) {
+					window.axios.get('/appointments/' + calEvent.id).then(function (response) {
+						console.log('HUURR', response.data);
+						self.selectedId = response.data.id;
+						self.selectedTitle = response.data.title;
+						self.selectedStart = response.data.start;
+						self.selectedEnd = response.data.end;
+						self.selectedResourceId = response.data.resource_id;
+						self.selectedDescription = response.data.description;
+					}).then(function (data) {
+						self.showViewModal = true;
+					});
 				}
 			}
 		};
@@ -46542,7 +46555,7 @@ var app = new Vue({
 
 			this.showApptModal = !this.showApptModal;
 		},
-		broadcastResource: function broadcastResource(resource) {},
+		lockTimeSlot: function lockTimeSlot(start, end, resourceId) {},
 		refreshEvents: function refreshEvents() {
 
 			$('#calendar').fullCalendar('refetchResources');
@@ -46569,8 +46582,7 @@ var app = new Vue({
 	computed: {},
 
 	mounted: function mounted() {
-		console.log(this);
-		console.log(this.$refs);
+		console.log('App mounted');
 	}
 });
 
@@ -95777,6 +95789,7 @@ var moment = __webpack_require__(0);
 			// Submit
 			if (this.title != '') {
 
+				console.log('this.showTimes', this.showTimes);
 				var sendData = {
 
 					title: this.title,
@@ -97747,14 +97760,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: { datetime: __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default.a },
-	props: ['showApptModal', 'res'],
+	props: ['showApptModal', 'res', 'inid', 'intitle', 'indescription', 'instart', 'inend', 'inresourceid'],
 	data: function data() {
 		return {
-			title: '',
-			description: '',
-			start: '',
-			end: '',
-			resource_id: 0,
+			id: this.inid,
+			title: this.intitle,
+			description: this.indescription,
+			start: this.instart,
+			end: this.inend,
+			resource_id: this.inresourceid,
 			resources: this.res,
 			showTimes: true
 		};
@@ -97767,27 +97781,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var self = this;
 
 			// Submit
-			if (this.title != '') {
-				$('#calendar').fullCalendar('addResource', { title: this.title }, true);
-
-				window.axios.post('/appointments', {
-					title: this.title,
-					description: this.description,
-					start: moment(this.start).format(),
-					end: moment(this.end).format(),
-					resource_id: this.resource_id
-				}).then(function (response) {
-					// Close the modal
-					self.$emit('close');
-					window.toastr.info('Resource added');
-					_this.$parent.$options.methods.refreshEvents();
-				});
-			}
+			window.axios.put('/appointments/' + this.id, {
+				title: this.title,
+				description: this.description,
+				start: moment(this.start).format(),
+				end: moment(this.end).format(),
+				resource_id: this.resource_id
+			}).then(function (response) {
+				// Close the modal
+				self.$emit('close');
+				window.toastr.info('Resource edited');
+				_this.$parent.$options.methods.refreshEvents();
+			});
 		}
 	},
 	mounted: function mounted() {
-		console.log('APpt Modal is on!');
-		console.log('props', this.resources);
+		console.log('View Modal is on!');
 	}
 });
 
@@ -97990,7 +97999,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n\t\t\t\t\t\t\t\tSubmit\n\t\t\t\t\t\t\t")]
+                      [_vm._v("\n\t\t\t\t\t\t\t\tEdit\n\t\t\t\t\t\t\t")]
                     ),
                     _vm._v(" "),
                     _c(

@@ -1,4 +1,4 @@
-<template id="modal-template">
+<template id="appt-modal">
 	<div class="modal-mask" transition="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper">
@@ -85,6 +85,7 @@
 				// Submit
 				if (this.title != '') {
 
+					console.log('this.showTimes', this.showTimes)
 					let sendData = {
 
 						title: this.title,
