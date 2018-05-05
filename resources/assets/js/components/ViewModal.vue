@@ -26,8 +26,8 @@
 								<div class="modal-body-right">
 									<toggle-button :value="true" :labels="{checked: 'Now', unchecked: 'Later'}" v-model="showTimes" />
 									<div v-if="showTimes">
-										<datetime type="datetime" width="300" v-model='start'></datetime>
-										<datetime type="datetime" width="300" v-model='end'></datetime>
+										<input type="datetime-local" v-model="start" />
+										<input type="datetime-local" v-model="end" />
 									</div>
 								</div>
 							</slot>
@@ -51,10 +51,9 @@
 </template>
 
 <script>
-	import datetime from 'vuejs-datetimepicker';
+	const moment = require('moment');
 
 	export default {
-		components: {datetime},
 		props: [
 			'showApptModal',
 			'res',
@@ -70,8 +69,8 @@
 				id: this.inid,
 				title: this.intitle,
 				description: this.indescription,
-				start: this.instart,
-				end: this.inend,
+				start: moment(this.instart).format('YYYY-MM-DD\THH:mm:SS'),
+				end: moment(this.inend).format('YYYY-MM-DD\THH:mm:SS'),
 				resource_id: this.inresourceid,
 				resources: this.res,
 				showTimes: true
@@ -100,6 +99,7 @@
 		},
 		mounted() {
 			console.log('View Modal is on!')
+			console.log(this.start, this.end)
 		}
 	}
 </script>

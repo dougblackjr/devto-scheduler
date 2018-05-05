@@ -97701,8 +97701,6 @@ exports.push([module.i, "\n.modal-mask[data-v-b30eaa3e] {\n\tposition: fixed;\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker__ = __webpack_require__(250);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker__);
 //
 //
 //
@@ -97756,18 +97754,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-
+var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	components: { datetime: __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default.a },
 	props: ['showApptModal', 'res', 'inid', 'intitle', 'indescription', 'instart', 'inend', 'inresourceid'],
 	data: function data() {
 		return {
 			id: this.inid,
 			title: this.intitle,
 			description: this.indescription,
-			start: this.instart,
-			end: this.inend,
+			start: moment(this.instart).format('YYYY-MM-DD\THH:mm:SS'),
+			end: moment(this.inend).format('YYYY-MM-DD\THH:mm:SS'),
 			resource_id: this.inresourceid,
 			resources: this.res,
 			showTimes: true
@@ -97797,6 +97794,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	mounted: function mounted() {
 		console.log('View Modal is on!');
+		console.log(this.start, this.end);
 	}
 });
 
@@ -97946,33 +97944,49 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.showTimes
-                          ? _c(
-                              "div",
-                              [
-                                _c("datetime", {
-                                  attrs: { type: "datetime", width: "300" },
-                                  model: {
+                          ? _c("div", [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
                                     value: _vm.start,
-                                    callback: function($$v) {
-                                      _vm.start = $$v
-                                    },
                                     expression: "start"
                                   }
-                                }),
-                                _vm._v(" "),
-                                _c("datetime", {
-                                  attrs: { type: "datetime", width: "300" },
-                                  model: {
+                                ],
+                                attrs: { type: "datetime-local" },
+                                domProps: { value: _vm.start },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.start = $event.target.value
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
                                     value: _vm.end,
-                                    callback: function($$v) {
-                                      _vm.end = $$v
-                                    },
                                     expression: "end"
                                   }
-                                })
-                              ],
-                              1
-                            )
+                                ],
+                                attrs: { type: "datetime-local" },
+                                domProps: { value: _vm.end },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.end = $event.target.value
+                                  }
+                                }
+                              })
+                            ])
                           : _vm._e()
                       ],
                       1
