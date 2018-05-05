@@ -23,8 +23,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/resources', 'ResourceController@index');
 Route::post('/resources', 'ResourceController@add');
 
-//Resource
+// Appointment
 Route::post('/appointments', 'AppointmentController@index');
 Route::post('/appointments/add', 'AppointmentController@add');
 Route::get('/appointments/{id}', 'AppointmentController@view');
 Route::put('/appointments/{id}', 'AppointmentController@update');
+
+// Calendar Routes
+Route::get('/waitlist', 'CalendarController@getWaitlist');

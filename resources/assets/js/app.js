@@ -16,6 +16,7 @@ import 'toastr/build/toastr.min.css';
 Vue.component('modal', require('./components/Modal.vue'))
 Vue.component('apptmodal', require('./components/ApptModal.vue'))
 Vue.component('viewmodal', require('./components/ViewModal.vue'))
+Vue.component('waitlistcard', require('./components/WaitListCard.vue'))
 Vue.use(FullCalendar)
 Vue.use(ToggleButton)
 
@@ -35,6 +36,7 @@ const app = new Vue({
 			selectedStart: '',
 			selectedEnd: '',
 			allResourceInfo: {},
+			waitList: {},
 			eventSources: [
 			{
 				events(start, end, timezone, callback) {
@@ -73,6 +75,9 @@ const app = new Vue({
 					}
 				},
 				defaultView: "timelineDay",
+				droppable: true,
+				selectable: true,
+				selectHelper: true,
 				header: {
 					left: "promptResource addAppt today prev,next",
 					center: "title",
@@ -102,6 +107,21 @@ const app = new Vue({
 						})
 
 				},
+				eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+
+					window.axios.put('/appointments/' + event.id,
+						{
+							title: event.title,
+							description: event.description,
+							resource_id: event.resourceId,
+							start: event.start.format(),
+							end: event.end.format()
+						})
+					.then((response) => {
+						toastr.info('Appointment updated');
+					})
+
+				},
 			}
 		}
 	},
@@ -119,10 +139,21 @@ const app = new Vue({
 		lockTimeSlot(start, end, resourceId) {
 			
 		},
+		getWaitList() {
+
+			window.axios.get('/waitlist')
+				.then((response) => {
+					console.log(response.data)
+					this.waitList = response.data
+
+				});
+
+		},
 		refreshEvents() {
 
 			$('#calendar').fullCalendar('refetchResources');
 			$('#calendar').fullCalendar('refetchEvents');
+			this.getWaitList()
 
 		},
 
@@ -153,6 +184,7 @@ const app = new Vue({
 
 	mounted() {
 		console.log('App mounted')
+		this.getWaitList()
 	}
 
 });
