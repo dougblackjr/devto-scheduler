@@ -1,6 +1,6 @@
 <template>
 	<aside class="wait-list-card" draggable="true">
-		<h2>{{ title }} ~ <small>{{ dateSinceCreated }}</small></h2>
+		<h2>{{ title }}<br /><small>{{ dateSinceCreated }}</small></h2>
 	</aside>
 </template>
 
@@ -22,9 +22,10 @@
 		},
 		computed: {
 			dateSinceCreated() {
-				let now = moment(),
+				let now = moment().utc(),
 					date = moment(this.createdDate),
 					diff = now.diff(date, 'minutes')
+				console.log(now.format(), date.format(), diff)
 
 				return diff + " " + (diff == 1 ? 'minute' : 'minutes')
 			}
@@ -34,7 +35,7 @@
 		},
 		mounted() {
 			console.log('APpt Modal is on!')
-			console.log('props', this.id, this.title)
+			console.log('props', this.id, this.title, this.createdDate)
 		}
 	}
 </script>
@@ -45,6 +46,7 @@
 		border-radius: 10px;
 		border: 1px solid #4e4e4e;
 		text-align: center;
+		margin: 1rem;
 	}
 
 	h2 {

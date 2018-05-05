@@ -46558,6 +46558,14 @@ var app = new Vue({
 					}).then(function (response) {
 						toastr.info('Appointment updated');
 					});
+				},
+				drop: function drop(date, jsEvent, ui, resourceId) {
+
+					console.log(date, jsEvent, ui, resourceId);
+					self.selectedStart = date.format('YYYY-MM-DD\THH:mm:SS');
+					self.selectedEnd = date.format('YYYY-MM-DD\THH:mm:SS');
+					self.selectedResourceId = resourceId;
+					self.toggleApptModal();
 				}
 			}
 		};
@@ -98164,7 +98172,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.wait-list-card[data-v-23bd0ccc] {\n\tbackground-color: #89b4ce;\n\tborder-radius: 10px;\n\tborder: 1px solid #4e4e4e;\n\ttext-align: center;\n}\nh2[data-v-23bd0ccc] {\n\tfont-size: 1rem;\n\tfont-weight: bold;\n\tpadding: 2px;\n}\nsmall[data-v-23bd0ccc] {\n\tfont-size: 0.8rem;\n}\n", ""]);
+exports.push([module.i, "\n.wait-list-card[data-v-23bd0ccc] {\n\tbackground-color: #89b4ce;\n\tborder-radius: 10px;\n\tborder: 1px solid #4e4e4e;\n\ttext-align: center;\n\tmargin: 1rem;\n}\nh2[data-v-23bd0ccc] {\n\tfont-size: 1rem;\n\tfont-weight: bold;\n\tpadding: 2px;\n}\nsmall[data-v-23bd0ccc] {\n\tfont-size: 0.8rem;\n}\n", ""]);
 
 // exports
 
@@ -98196,9 +98204,10 @@ var moment = __webpack_require__(0);
 
 	computed: {
 		dateSinceCreated: function dateSinceCreated() {
-			var now = moment(),
+			var now = moment().utc(),
 			    date = moment(this.createdDate),
 			    diff = now.diff(date, 'minutes');
+			console.log(now.format(), date.format(), diff);
 
 			return diff + " " + (diff == 1 ? 'minute' : 'minutes');
 		}
@@ -98206,7 +98215,7 @@ var moment = __webpack_require__(0);
 	methods: {},
 	mounted: function mounted() {
 		console.log('APpt Modal is on!');
-		console.log('props', this.id, this.title);
+		console.log('props', this.id, this.title, this.createdDate);
 	}
 });
 
@@ -98223,7 +98232,8 @@ var render = function() {
     { staticClass: "wait-list-card", attrs: { draggable: "true" } },
     [
       _c("h2", [
-        _vm._v(_vm._s(_vm.title) + " ~ "),
+        _vm._v(_vm._s(_vm.title)),
+        _c("br"),
         _c("small", [_vm._v(_vm._s(_vm.dateSinceCreated))])
       ])
     ]

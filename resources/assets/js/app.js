@@ -122,6 +122,16 @@ const app = new Vue({
 					})
 
 				},
+				drop: function(date, jsEvent, ui, resourceId) {
+
+					console.log(date, jsEvent, ui, resourceId)
+					self.selectedStart = date.format('YYYY-MM-DD\THH:mm:SS')
+					self.selectedEnd = date.format('YYYY-MM-DD\THH:mm:SS')
+					self.selectedResourceId = resourceId
+					self.toggleApptModal();
+
+					
+				},
 			}
 		}
 	},

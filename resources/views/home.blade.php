@@ -45,7 +45,12 @@
 			<div class="card">
 				<div class="card-header">Wait List</div>
 				<div class="card-body">
-					<waitlistcard v-for="card in waitList" v-bind:inid="card.id" v-bind:intitle="card.title" v-bind:increateddat="card.created_at"></waitlistcard>
+					<waitlistcard
+						v-for="card in waitList"
+						:inid="card.id"
+						:intitle="card.title"
+						:increateddate="card.created_at">
+					</waitlistcard>
 				</div>
 			</div>
 		</div>
