@@ -25,7 +25,7 @@
 								</div>
 								<div class="modal-body-right">
 									<label>Schedule Now or Later</label>
-									<toggle-button :value="true" :labels="{checked: 'Now', unchecked: 'Later'}" v-model="showTimes" height=45 width=75 />
+									<toggle-button :value="true" :labels="{checked: 'Now', unchecked: 'Later'}" v-model="showTimes" :height="45" :width="75" />
 									<div v-if="showTimes">
 										<input type="datetime-local" v-model="start" />
 										<input type="datetime-local" v-model="end" />
@@ -106,8 +106,7 @@
 			}
 		},
 		mounted() {
-			console.log('APpt Modal is on!')
-			console.log('props', this.resources)
+			console.log('Appt Modal is on!')
 		}
 	}
 </script>

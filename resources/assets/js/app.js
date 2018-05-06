@@ -6,6 +6,8 @@ import FullCalendar from 'vue-full-calendar'
 import 'fullcalendar-scheduler'
 import ToggleButton from 'vue-js-toggle-button'
 const moment = require('moment');
+import 'jquery-ui-bundle';
+import 'jquery-ui-bundle/jquery-ui.css';
 
 // Stylesheets
 import 'fullcalendar/dist/fullcalendar.min.css'
@@ -75,6 +77,7 @@ const app = new Vue({
 					}
 				},
 				defaultView: "timelineDay",
+				editable: true,
 				droppable: true,
 				selectable: true,
 				selectHelper: true,
@@ -94,7 +97,6 @@ const app = new Vue({
 				eventClick: function(calEvent, jsEvent, view) {
 					window.axios.get('/appointments/' + calEvent.id)
 						.then((response) => {
-							console.log('HUURR', response.data)
 							self.selectedId = response.data.id
 							self.selectedTitle = response.data.title
 							self.selectedStart = response.data.start
@@ -108,7 +110,6 @@ const app = new Vue({
 
 				},
 				eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
-
 					window.axios.put('/appointments/' + event.id,
 						{
 							title: event.title,
@@ -124,19 +125,26 @@ const app = new Vue({
 				},
 				drop: function(date, jsEvent, ui, resourceId) {
 
-					console.log(date, jsEvent, ui, resourceId)
-					self.selectedStart = date.format('YYYY-MM-DD\THH:mm:SS')
-					self.selectedEnd = date.format('YYYY-MM-DD\THH:mm:SS')
-					self.selectedResourceId = resourceId
-					self.toggleApptModal();
+					window.axios.put('/appointments/' + this.dataset.id,
+						{
+							title: this.dataset.title,
+							description: (this.dataset.description == null ? '' : this.dataset.description),
+							resource_id: resourceId,
+							start: date.format(),
+							end: date.format()
+						})
+					.then((response) => {
+						toastr.info('Appointment scheduled. Resize to adjust time.');
+						self.refreshEvents()
+					})
 
 				},
 				eventResize: function( event, jsEvent, ui, view ) {
-					console.log('RESUZE')
+
 					window.axios.put('/appointments/' + event.id,
 						{
 							title: event.title,
-							description: event.description,
+							description: (event.description == null ? '' : event.description),
 							resource_id: event.resourceId,
 							start: event.start.format(),
 							end: event.end.format()

@@ -1,5 +1,5 @@
 <template>
-	<aside class="wait-list-card" draggable="true">
+	<aside class="wait-list-card" draggable="true" v-bind:id='"wait-list-card-" + id' v-bind:data-id='id' v-bind:data-title='title' v-bind:data-description="description">
 		<h2>{{ title }}<br /><small>{{ dateSinceCreated }}</small></h2>
 	</aside>
 </template>
@@ -11,12 +11,14 @@
 		props: [
 			'inid',
 			'intitle',
+			'indescription',
 			'increateddate'
 		],
 		data() {
 			return {
 				id: this.inid,
 				title: this.intitle,
+				description: this.indescription,
 				createdDate: this.increateddate
 			}
 		},
@@ -34,8 +36,12 @@
 
 		},
 		mounted() {
-			console.log('APpt Modal is on!')
-			console.log('props', this.id, this.title, this.createdDate)
+			console.log('Wait list card is on!', this.id)
+			$('#wait-list-card-' + this.id).draggable({
+				helper: 'clone',
+				revert: 'invalid',
+				cursor: 'move'
+			});
 		}
 	}
 </script>

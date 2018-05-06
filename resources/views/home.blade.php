@@ -49,6 +49,7 @@
 						v-for="card in waitList"
 						:inid="card.id"
 						:intitle="card.title"
+						:indescription="card.description"
 						:increateddate="card.created_at">
 					</waitlistcard>
 				</div>
