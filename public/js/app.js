@@ -57615,6 +57615,13 @@ var app = new Vue({
 	}
 });
 
+// Echo listeners
+// Refresh waitlist
+Echo.channel('dev-to-contest').listen('.waitlist', function (e) {
+
+	getWaitList();
+});
+
 /***/ }),
 /* 171 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -57675,12 +57682,12 @@ if (token) {
 
 window.Pusher = __webpack_require__(196);
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
-// });
+window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
+  broadcaster: 'pusher',
+  key: "3710505f80a518761294",
+  cluster: "us2",
+  encrypted: true
+});
 
 /***/ }),
 /* 172 */

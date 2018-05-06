@@ -219,3 +219,12 @@ const app = new Vue({
 	}
 
 });
+
+// Echo listeners
+// Refresh waitlist
+Echo.channel('dev-to-contest')
+	.listen('.waitlist', (e) => {
+
+		getWaitList();
+
+	});

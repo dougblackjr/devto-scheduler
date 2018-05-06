@@ -8,6 +8,7 @@ use App\Appointment;
 use Auth;
 use Cake\Chronos\Chronos;
 use Carbon\Carbon;
+use App\Helpers\LockHelper;
 use App\Events\UpdateWaitlistEvent;
 
 class AppointmentController extends Controller
@@ -33,6 +34,7 @@ class AppointmentController extends Controller
 		if(is_null($request->start) || $is_null($request->end)) {
 
 			event(new UpdateWaitlistEvent($resource->toArray()));
+
 		}
 
 		return response()->json($resource);
@@ -43,6 +45,15 @@ class AppointmentController extends Controller
 	{
 
 		$appt = Appointment::where('id', $id)->first();
+
+		// Let's create an appointment lock if it has a time, or a waitlist lock if not
+		if(is_null($appt->start) || $is_null($appt->end)) {
+			// Waitlist lock
+			
+		} else {
+			// Appt lock
+			
+		}
 
 		return response()->json($appt);
 
