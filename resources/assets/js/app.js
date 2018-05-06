@@ -131,7 +131,7 @@ const app = new Vue({
 							description: (this.dataset.description == null ? '' : this.dataset.description),
 							resource_id: resourceId,
 							start: date.format(),
-							end: date.format()
+							end: date.add(2, 'hours').format()
 						})
 					.then((response) => {
 						toastr.info('Appointment scheduled. Resize to adjust time.');
