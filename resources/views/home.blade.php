@@ -24,7 +24,7 @@
 						:inend="selectedEnd"
 						:inresourceid="selectedResourceId"
 						v-if="showApptModal" 
-						@close="showApptModal = false">
+						@close="toggleApptModal()">
 					</apptmodal>
 					<viewmodal
 						:res="allResourceInfo"
@@ -45,16 +45,9 @@
 			<div class="card">
 				<div class="card-header">Wait List</div>
 				<div class="card-body">
-					<waitlistcard
-						v-for="card in waitList"
-						:key="card.id"
-						:inid="card.id"
-						:intitle="card.title"
-						:indescription="card.description"
-						:increateddate="card.created_at"
-						:inlocked="card.locked"
-						:inlockeddescription="card.lockedDescription">
-					</waitlistcard>
+					<waitlist
+						:incomingwaitlist="waitList">
+					</waitlist>
 				</div>
 			</div>
 		</div>

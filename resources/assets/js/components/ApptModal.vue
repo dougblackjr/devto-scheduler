@@ -39,7 +39,7 @@
 								<button type="submit" class="modal-success-button" @click.prevent="submitAppointment()">
 									Submit
 								</button>
-								<button type="cancel" class="modal-default-button" @click.prevent="$emit('close')">
+								<button type="cancel" class="modal-default-button" @click.prevent="closeModal()">
 									Close
 								</button>
 							</slot>
@@ -79,8 +79,16 @@
 			}
 		},
 		methods: {
+			closeModal() {
+				console.log('close event');
+				window.lockFxns.unlockTimeSlot(this.inresourceid, moment(this.instart), moment(this.inend));
+				this.$emit('close');
+
+			},
 			submitAppointment() {
 				let self = this
+
+				window.lockFxns.unlockTimeSlot(this.resource_id, moment(this.start), moment(this.end));
 
 				// Submit
 				if (this.title != '') {
@@ -99,7 +107,7 @@
 					.then((response) => {
 						// Close the modal
 						self.$emit('close');
-						window.toastr.info('Resource added')
+						window.toastr.info('Appointment added')
 						this.$parent.$options.methods.refreshEvents()
 					})
 				}

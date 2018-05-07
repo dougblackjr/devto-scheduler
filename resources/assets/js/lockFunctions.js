@@ -6,7 +6,7 @@ window.lockFxns = {
 				type: 'slot',
 				id: resource_id,
 				date: start_date.format('YYYY-MM-DD'),
-				data: start_date.format('X') + '-' + end_date.format('X'), 
+				data: start_date.utc().format('X') + '-' + end_date.utc().format('X'), 
 			};
 
 		let url = (lock ? '/lock' : '/unlock')

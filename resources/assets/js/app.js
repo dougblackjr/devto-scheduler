@@ -19,6 +19,7 @@ import 'toastr/build/toastr.min.css';
 Vue.component('modal', require('./components/Modal.vue'))
 Vue.component('apptmodal', require('./components/ApptModal.vue'))
 Vue.component('viewmodal', require('./components/ViewModal.vue'))
+Vue.component('waitlist', require('./components/WaitList.vue'))
 Vue.component('waitlistcard', require('./components/WaitListCard.vue'))
 Vue.use(FullCalendar)
 Vue.use(ToggleButton)
@@ -89,11 +90,12 @@ const app = new Vue({
 				},
 				select: function (start, end, jsEvent, view, resource) {
 
-					lockTimeSlot(resource.id, start.utc().format('X'), end.utc().format('X'));
+					window.lockFxns.lockTimeSlot(resource.id, start, end);
 
-					self.selectedStart = start.format()
-					self.selectedEnd = end.format()
+					self.selectedStart = start.format().replace('Z','')
+					self.selectedEnd = end.format().replace('Z','')
 					self.selectedResourceId = resource.id
+					console.log(self.selectedStart, self.selectedEnd)
 					self.toggleApptModal();
 
 				},
@@ -131,7 +133,7 @@ const app = new Vue({
 				drop: function(date, jsEvent, ui, resourceId) {
 
 					// Lock on waitlist
-					window.lockFxns.lock('wait', this.dataset.id)
+					let cardId = this.dataset.id
 
 					window.axios.put('/appointments/' + this.dataset.id,
 						{
@@ -160,7 +162,18 @@ const app = new Vue({
 					.then((response) => {
 						toastr.info('Appointment updated');
 					})
-				}
+				},
+				eventRender: function(event, element, view) {
+
+					if (event.rendering == 'background') {
+
+						element.append(event.title);
+
+					}
+
+					element.find('.fc-title').append("<br/><small>" + event.description + "</small>");
+
+				},
 			}
 		}
 	},
@@ -175,16 +188,12 @@ const app = new Vue({
 			this.showApptModal = !this.showApptModal
 
 		},
-		lockTimeSlot(start, end, resourceId) {
-			
-		},
 		getWaitList() {
 
 			console.log('gettting waitlist')
 			window.axios.get('/waitlist')
 				.then((response) => {
 					this.waitList = response.data
-					app.$forceUpdate()
 					console.log('waitlist', this.waitList)
 				});
 
@@ -233,7 +242,7 @@ const app = new Vue({
 
 		window.Echo.channel('dev-to-contest')
 			.listen('.calendar', (e) => {
-				console.log('caught calendar event')
+				toastr.info('Calendar has been updated')
 				this.refreshEvents();
 
 			});

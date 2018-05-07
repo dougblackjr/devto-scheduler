@@ -57443,6 +57443,7 @@ var moment = __webpack_require__(0);
 Vue.component('modal', __webpack_require__(251));
 Vue.component('apptmodal', __webpack_require__(257));
 Vue.component('viewmodal', __webpack_require__(267));
+Vue.component('waitlist', __webpack_require__(280));
 Vue.component('waitlistcard', __webpack_require__(272));
 Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_full_calendar__["a" /* default */]);
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_js_toggle_button___default.a);
@@ -57509,11 +57510,12 @@ var app = new Vue({
 				},
 				select: function select(start, end, jsEvent, view, resource) {
 
-					lockTimeSlot(resource.id, start.utc().format('X'), end.utc().format('X'));
+					window.lockFxns.lockTimeSlot(resource.id, start, end);
 
-					self.selectedStart = start.format();
-					self.selectedEnd = end.format();
+					self.selectedStart = start.format().replace('Z', '');
+					self.selectedEnd = end.format().replace('Z', '');
 					self.selectedResourceId = resource.id;
+					console.log(self.selectedStart, self.selectedEnd);
 					self.toggleApptModal();
 				},
 				eventClick: function eventClick(calEvent, jsEvent, view) {
@@ -57544,7 +57546,7 @@ var app = new Vue({
 				drop: function drop(date, jsEvent, ui, resourceId) {
 
 					// Lock on waitlist
-					window.lockFxns.lock('wait', this.dataset.id);
+					var cardId = this.dataset.id;
 
 					window.axios.put('/appointments/' + this.dataset.id, {
 						title: this.dataset.title,
@@ -57568,6 +57570,15 @@ var app = new Vue({
 					}).then(function (response) {
 						toastr.info('Appointment updated');
 					});
+				},
+				eventRender: function eventRender(event, element, view) {
+
+					if (event.rendering == 'background') {
+
+						element.append(event.title);
+					}
+
+					element.find('.fc-title').append("<br/><small>" + event.description + "</small>");
 				}
 			}
 		};
@@ -57582,14 +57593,12 @@ var app = new Vue({
 
 			this.showApptModal = !this.showApptModal;
 		},
-		lockTimeSlot: function lockTimeSlot(start, end, resourceId) {},
 		getWaitList: function getWaitList() {
 			var _this = this;
 
 			console.log('gettting waitlist');
 			window.axios.get('/waitlist').then(function (response) {
 				_this.waitList = response.data;
-				app.$forceUpdate();
 				console.log('waitlist', _this.waitList);
 			});
 		},
@@ -57630,7 +57639,7 @@ var app = new Vue({
 		});
 
 		window.Echo.channel('dev-to-contest').listen('.calendar', function (e) {
-			console.log('caught calendar event');
+			toastr.info('Calendar has been updated');
 			_this2.refreshEvents();
 		});
 	}
@@ -115467,10 +115476,17 @@ var moment = __webpack_require__(0);
 	},
 
 	methods: {
+		closeModal: function closeModal() {
+			console.log('close event');
+			window.lockFxns.unlockTimeSlot(this.inresourceid, moment(this.instart), moment(this.inend));
+			this.$emit('close');
+		},
 		submitAppointment: function submitAppointment() {
 			var _this = this;
 
 			var self = this;
+
+			window.lockFxns.unlockTimeSlot(this.resource_id, moment(this.start), moment(this.end));
 
 			// Submit
 			if (this.title != '') {
@@ -115488,7 +115504,7 @@ var moment = __webpack_require__(0);
 				window.axios.post('/appointments/add', sendData).then(function (response) {
 					// Close the modal
 					self.$emit('close');
-					window.toastr.info('Resource added');
+					window.toastr.info('Appointment added');
 					_this.$parent.$options.methods.refreshEvents();
 				});
 			}
@@ -116465,7 +116481,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            _vm.$emit("close")
+                            _vm.closeModal()
                           }
                         }
                       },
@@ -117053,7 +117069,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 var moment = __webpack_require__(0);
 
@@ -117086,29 +117101,8 @@ var self = this;
 			return this.locked;
 		}
 	},
-	methods: {
-		lock: function lock() {
-			window.lockFxns.lock('wait', this.id);
-			this.locked = true;
-		}
-	},
-	mounted: function mounted() {
-		console.log('Wait list card is on!', this.id);
-		if (!this.locked) {
+	methods: {}
 
-			$('#wait-list-card-' + this.id).draggable({
-				helper: 'clone',
-				revert: function revert(is_valid_drop) {
-					if (!is_valid_drop) {
-						window.lockFxns.unlock('wait', this.id);
-					}
-
-					return true;
-				},
-				cursor: 'move'
-			});
-		}
-	}
 });
 
 /***/ }),
@@ -117130,12 +117124,6 @@ var render = function() {
         "data-id": _vm.id,
         "data-title": _vm.title,
         "data-description": _vm.description
-      },
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.lock($event)
-        }
       }
     },
     [
@@ -117180,7 +117168,7 @@ window.lockFxns = {
 			type: 'slot',
 			id: resource_id,
 			date: start_date.format('YYYY-MM-DD'),
-			data: start_date.format('X') + '-' + end_date.format('X')
+			data: start_date.utc().format('X') + '-' + end_date.utc().format('X')
 		};
 
 		var url = lock ? '/lock' : '/unlock';
@@ -117210,6 +117198,192 @@ window.lockFxns = {
 		this.lock(type, id, false);
 	}
 };
+
+/***/ }),
+/* 280 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(283)
+}
+var normalizeComponent = __webpack_require__(6)
+/* script */
+var __vue_script__ = __webpack_require__(281)
+/* template */
+var __vue_template__ = __webpack_require__(285)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-c61d492c"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/WaitList.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c61d492c", Component.options)
+  } else {
+    hotAPI.reload("data-v-c61d492c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 281 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var self = this;
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['incomingwaitlist'],
+	data: function data() {
+		return {
+			waitList: this.incomingwaitlist
+		};
+	},
+
+	computed: {},
+	methods: {
+		lock: function lock(id) {
+			console.log('click', id);
+			// window.lockFxns.lock('wait', id)
+		}
+	},
+	mounted: function mounted() {
+		console.log('waitlist component', this.waitList);
+		$('.wait-list-card:not(.locked)').draggable({
+			helper: 'clone',
+			revert: function revert(is_valid_drop) {
+				if (!is_valid_drop) {
+					window.lockFxns.unlock('wait', this.id);
+				}
+
+				return true;
+			},
+			cursor: 'move'
+		});
+	}
+});
+
+/***/ }),
+/* 282 */,
+/* 283 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(284);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(8)("4dfb7336", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-c61d492c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WaitList.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-c61d492c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./WaitList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 284 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.wait-list-card[data-v-c61d492c] {\n\tbackground-color: #89b4ce;\n\tborder-radius: 10px;\n\tborder: 1px solid #4e4e4e;\n\ttext-align: center;\n\tmargin: 1rem;\n}\nh2[data-v-c61d492c] {\n\tfont-size: 1rem;\n\tfont-weight: bold;\n\tpadding: 2px;\n}\nsmall[data-v-c61d492c] {\n\tfont-size: 0.8rem;\n}\n.locked[data-v-c61d492c] {\n\topacity: 0.5;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 285 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "aside",
+    _vm._l(_vm.waitList, function(card) {
+      return _c("div", {
+        key: card.id,
+        staticClass: "wait-list-card",
+        class: { locked: card.locked },
+        attrs: {
+          draggable: "true",
+          id: "wait-list-card-" + card.id,
+          "data-id": card.id,
+          "data-title": card.title,
+          "data-description": card.description
+        }
+      })
+    })
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c61d492c", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

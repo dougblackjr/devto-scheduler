@@ -6,7 +6,6 @@
 		v-bind:data-id='id'
 		v-bind:data-title='title'
 		v-bind:data-description="description"
-		@click.prevent="lock"
 		v-bind:class="{ locked: isLocked }"
 	>
 		<h2>{{ title }}<br />
@@ -55,28 +54,6 @@
 			}
 		},
 		methods: {
-			lock: function() {
-				window.lockFxns.lock('wait', this.id)
-				this.locked = true
-			}
-		},
-		mounted() {
-			console.log('Wait list card is on!', this.id)
-			if(!this.locked) {
-
-				$('#wait-list-card-' + this.id).draggable({
-					helper: 'clone',
-					revert: function(is_valid_drop) {
-						if(!is_valid_drop) {
-							window.lockFxns.unlock('wait', this.id)
-						}
-
-						return true;
-					},
-					cursor: 'move'
-				});
-
-			}
 
 		}
 

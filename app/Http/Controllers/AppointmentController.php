@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Resource;
 use App\Appointment;
+use App\User;
+use Illuminate\Support\Facades\Redis;
 use Auth;
 use Cake\Chronos\Chronos;
 use Carbon\Carbon;
@@ -14,10 +16,16 @@ use App\Events\NewAppointmentEvent;
 
 class AppointmentController extends Controller
 {
+
+	protected $redisConnection;
+
 	public function __construct()
 	{
 
 		$this->middleware('auth');
+
+		// Redis connection to get locks
+		$this->redisConnection = Redis::connection();
 
 	}
 
@@ -104,8 +112,28 @@ class AppointmentController extends Controller
 		// Get Slot Locks
 		$locks = LockHelper::get('slot');
 
-		foreach ($locks as $key => $value) {
-			dd($locks, $key, $value);
+		foreach ($locks as $l) {
+			$lock = $this->redisConnection->get($l);
+			
+			$lockData = explode(':', $l);
+
+			$timeData = explode('-', $lockData[4]);
+
+			$theUser = User::where('id', $lock)->first();
+
+			$start = Carbon::createFromFormat('U', $timeData[0]);
+
+			$end = Carbon::createFromFormat('U', $timeData[1]);
+
+			$outputData[] = array(
+				'resourceId' => $lockData[2],
+				'title' => "Locked by:<br />" . $theUser->name,
+				'start' => $start->toDateTimeString(),
+				'end' => $end->toDateTimeString(),
+				'rendering' => 'background',
+				'editable' => false
+			);
+
 		}
 
 		return response()->json($outputData);

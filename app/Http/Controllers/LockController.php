@@ -43,10 +43,12 @@ class LockController extends Controller
 				break;
 
 			case 'slot':
+				$id = $request->id;
 				$date = $request->date;
 				$data = $request->data;
-				$lock = $this->lockSlot($date, $data);
+				$lock = $this->lockSlot($id, $date, $data);
 				event(new LockTimeSlotEvent($lock));
+				break;
 
 			default:
 				return response()->json(['result' => 'BORK']);
@@ -74,9 +76,10 @@ class LockController extends Controller
 				break;
 
 			case 'slot':
+				$id = $request->id;
 				$date = $request->date;
 				$data = $request->data;
-				$lock = $this->unlockSlot($date, $data);
+				$lock = $this->unlockSlot($id, $date, $data);
 				event(new LockTimeSlotEvent($lock));
 
 			default:
@@ -102,10 +105,10 @@ class LockController extends Controller
 
 	}
 
-	private function lockSlot($date, $data)
+	private function lockSlot($id, $date, $data)
 	{
 
-		$this->redisConnection->set('lock:slot:' . $date . ':' . $data, $this->user->id);
+		$this->redisConnection->set('lock:slot:' . $id . ':' . $date . ':' . $data, $this->user->id);
 
 	}
 
@@ -123,10 +126,10 @@ class LockController extends Controller
 
 	}
 
-	private function unlockSlot($date, $data)
+	private function unlockSlot($id, $date, $data)
 	{
 
-		$this->redisConnection->del('lock:slot:' . $date . ':' . $data);
+		$this->redisConnection->del('lock:slot:' . $id .':' . $date . ':' . $data);
 
 	}
 
