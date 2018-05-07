@@ -99,7 +99,6 @@
 		},
 		mounted() {
 			console.log('View Modal is on!')
-			console.log(this.start, this.end)
 		}
 	}
 </script>

@@ -57520,7 +57520,6 @@ var app = new Vue({
 					self.selectedStart = start.format().replace('Z', '');
 					self.selectedEnd = end.format().replace('Z', '');
 					self.selectedResourceId = resource.id;
-					console.log(self.selectedStart, self.selectedEnd, self.lockStart, self.lockEnd);
 					self.toggleApptModal();
 				},
 				eventClick: function eventClick(calEvent, jsEvent, view) {
@@ -57601,10 +57600,8 @@ var app = new Vue({
 		getWaitList: function getWaitList() {
 			var _this = this;
 
-			console.log('gettting waitlist');
 			window.axios.get('/waitlist').then(function (response) {
 				_this.waitList = response.data;
-				console.log('waitlist', _this.waitList);
 			});
 		},
 		refreshEvents: function refreshEvents() {
@@ -57631,15 +57628,20 @@ var app = new Vue({
 		}
 	},
 
-	computed: {},
+	computed: {
+		theWaitlist: function theWaitlist() {}
+	},
 
+	created: function created() {
+
+		this.getWaitList();
+	},
 	mounted: function mounted() {
 		var _this2 = this;
 
 		console.log('App mounted');
-		this.getWaitList();
 		window.Echo.channel('dev-to-contest').listen('.waitlist', function (e) {
-			console.log('caught waitlist event');
+			toastr.info('Waitlist has been updated');
 			_this2.getWaitList();
 		});
 
@@ -115484,7 +115486,7 @@ var moment = __webpack_require__(0);
 
 	methods: {
 		closeModal: function closeModal() {
-			console.log('close event');
+
 			window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 			this.$emit('close');
 		},
@@ -115498,7 +115500,6 @@ var moment = __webpack_require__(0);
 			// Submit
 			if (this.title != '') {
 
-				console.log('this.showTimes', this.showTimes);
 				var sendData = {
 
 					title: this.title,
@@ -116705,7 +116706,6 @@ var moment = __webpack_require__(0);
 	},
 	mounted: function mounted() {
 		console.log('View Modal is on!');
-		console.log(this.start, this.end);
 	}
 });
 
@@ -117075,7 +117075,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 var moment = __webpack_require__(0);
 
@@ -117104,12 +117103,23 @@ var self = this;
 			return diff + " " + (diff == 1 ? 'minute' : 'minutes');
 		},
 		isLocked: function isLocked() {
-			console.log('GETTING THE LOCK STATUS', this.locked);
 			return this.locked;
 		}
 	},
-	methods: {}
+	methods: {},
+	mounted: function mounted() {
+		$('.wait-list-card:not(.locked)').draggable({
+			helper: 'clone',
+			revert: function revert(is_valid_drop) {
+				if (!is_valid_drop) {
+					window.lockFxns.unlock('wait', this.id);
+				}
 
+				return true;
+			},
+			cursor: 'move'
+		});
+	}
 });
 
 /***/ }),
@@ -117127,7 +117137,6 @@ var render = function() {
       class: { locked: _vm.isLocked },
       attrs: {
         draggable: "true",
-        id: "wait-list-card-" + _vm.id,
         "data-id": _vm.id,
         "data-title": _vm.title,
         "data-description": _vm.description
@@ -117306,7 +117315,6 @@ var self = this;
 		}
 	},
 	mounted: function mounted() {
-		console.log('waitlist component', this.waitList);
 		$('.wait-list-card:not(.locked)').draggable({
 			helper: 'clone',
 			revert: function revert(is_valid_drop) {

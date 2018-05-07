@@ -47,9 +47,20 @@
 			<div class="card">
 				<div class="card-header">Wait List</div>
 				<div class="card-body">
-					<waitlist
+					{{-- <waitlist
 						:incomingwaitlist="waitList">
-					</waitlist>
+					</waitlist> --}}
+					<waitlistcard
+						v-for="card in waitList"
+						:key="card.id"
+						:inid="card.id"
+						:intitle="card.title"
+						:indescription="card.description"
+						:increateddate="card.created_at"
+						:inlocked="card.locked"
+						:inlockeddescription="card.description"
+						>
+					</waitlistcard>
 				</div>
 			</div>
 		</div>

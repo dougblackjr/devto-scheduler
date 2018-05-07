@@ -1,13 +1,12 @@
 <template>
-	<aside 
+	<aside
 		class="wait-list-card"
 		draggable="true"
-		v-bind:id='"wait-list-card-" + id'
-		v-bind:data-id='id'
-		v-bind:data-title='title'
-		v-bind:data-description="description"
 		v-bind:class="{ locked: isLocked }"
-	>
+		v-bind:data-id="id"
+		v-bind:data-title="title"
+		v-bind:data-description="description"
+		>
 		<h2>{{ title }}<br />
 			<small v-if="isLocked">{{ lockedDescription }}</small>
 			<small v-else>{{ dateSinceCreated }}</small>
@@ -49,12 +48,24 @@
 				return diff + " " + (diff == 1 ? 'minute' : 'minutes')
 			},
 			isLocked() {
-				console.log('GETTING THE LOCK STATUS', this.locked)
 				return this.locked;
 			}
 		},
 		methods: {
 
+		},
+		mounted() {
+			$('.wait-list-card:not(.locked)').draggable({
+				helper: 'clone',
+				revert: function(is_valid_drop) {
+					if(!is_valid_drop) {
+						window.lockFxns.unlock('wait', this.id)
+					}
+
+					return true;
+				},
+				cursor: 'move'
+			});
 		}
 
 	}

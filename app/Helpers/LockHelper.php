@@ -24,7 +24,7 @@ class LockHelper {
 		$lock = $redisConnection->set('lock:' . $type . ':' . $id, $data);
 
 		// Let's set an expiration date
-		$redisConnection->expire('lock:' . $type . ':' . $id, 600);
+		$redisConnection->expire('lock:' . $type . ':' . $id, 60);
 
 		return $lock;
 

@@ -100,7 +100,6 @@ const app = new Vue({
 					self.selectedStart = start.format().replace('Z','')
 					self.selectedEnd = end.format().replace('Z','')
 					self.selectedResourceId = resource.id
-					console.log(self.selectedStart, self.selectedEnd, self.lockStart, self.lockEnd)
 					self.toggleApptModal();
 
 				},
@@ -195,11 +194,9 @@ const app = new Vue({
 		},
 		getWaitList() {
 
-			console.log('gettting waitlist')
 			window.axios.get('/waitlist')
 				.then((response) => {
 					this.waitList = response.data
-					console.log('waitlist', this.waitList)
 				});
 
 		},
@@ -233,15 +230,22 @@ const app = new Vue({
 	},
 
 	computed: {
-		
+		theWaitlist() {
+
+		}
+	},
+
+	created() {
+
+		this.getWaitList()
+
 	},
 
 	mounted() {
 		console.log('App mounted')
-		this.getWaitList()
 		window.Echo.channel('dev-to-contest')
 			.listen('.waitlist', (e) => {
-				console.log('caught waitlist event')
+				toastr.info('Waitlist has been updated')
 				this.getWaitList();
 			});
 

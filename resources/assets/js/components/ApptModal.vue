@@ -84,7 +84,7 @@
 		},
 		methods: {
 			closeModal() {
-				console.log('close event');
+
 				window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 				this.$emit('close');
 
@@ -97,7 +97,6 @@
 				// Submit
 				if (this.title != '') {
 
-					console.log('this.showTimes', this.showTimes)
 					let sendData = {
 
 						title: this.title,

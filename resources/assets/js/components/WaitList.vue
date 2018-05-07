@@ -38,7 +38,6 @@
 			}
 		},
 		mounted() {
-			console.log('waitlist component', this.waitList)
 			$('.wait-list-card:not(.locked)').draggable({
 				helper: 'clone',
 				revert: function(is_valid_drop) {
