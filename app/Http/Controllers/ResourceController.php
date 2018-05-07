@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Resource;
 use Auth;
+use App\Events\NewResourceEvent;
 
 class ResourceController extends Controller
 {
@@ -21,6 +22,8 @@ class ResourceController extends Controller
 		$resource = Resource::create([
 			'title' => $request->title
 		]);
+
+		event(new NewResourceEvent($resource->toArray()));
 
 	}
 
