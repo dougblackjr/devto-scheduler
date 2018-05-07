@@ -57586,9 +57586,11 @@ var app = new Vue({
 		getWaitList: function getWaitList() {
 			var _this = this;
 
+			console.log('gettting waitlist');
 			window.axios.get('/waitlist').then(function (response) {
-				console.log(response.data);
 				_this.waitList = response.data;
+				app.$forceUpdate();
+				console.log('waitlist', _this.waitList);
 			});
 		},
 		refreshEvents: function refreshEvents() {
@@ -57618,21 +57620,20 @@ var app = new Vue({
 	computed: {},
 
 	mounted: function mounted() {
+		var _this2 = this;
+
 		console.log('App mounted');
 		this.getWaitList();
+		window.Echo.channel('dev-to-contest').listen('.waitlist', function (e) {
+			console.log('caught waitlist event');
+			_this2.getWaitList();
+		});
+
+		window.Echo.channel('dev-to-contest').listen('.calendar', function (e) {
+			console.log('caught calendar event');
+			_this2.refreshEvents();
+		});
 	}
-});
-
-// Echo listeners
-// Refresh waitlist
-Echo.channel('dev-to-contest').listen('.waitlist', function (e) {
-	console.log('caught waitlist event');
-	app.getWaitList();
-});
-
-Echo.channel('dev-to-contest').listen('.calendar', function (e) {
-	console.log('caught calendar event');
-	app.refreshEvents();
 });
 
 /***/ }),
@@ -117056,6 +117057,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 var moment = __webpack_require__(0);
 
+var self = this;
+
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['inid', 'intitle', 'indescription', 'increateddate', 'inlocked', 'inlockeddescription'],
 	data: function data() {
@@ -117077,6 +117080,10 @@ var moment = __webpack_require__(0);
 			console.log(now.format(), date.format(), diff);
 
 			return diff + " " + (diff == 1 ? 'minute' : 'minutes');
+		},
+		isLocked: function isLocked() {
+			console.log('GETTING THE LOCK STATUS', this.locked);
+			return this.locked;
 		}
 	},
 	methods: {
@@ -117116,7 +117123,7 @@ var render = function() {
     "aside",
     {
       staticClass: "wait-list-card",
-      class: { locked: _vm.locked },
+      class: { locked: _vm.isLocked },
       attrs: {
         draggable: "true",
         id: "wait-list-card-" + _vm.id,
@@ -117136,7 +117143,7 @@ var render = function() {
         _vm._v(_vm._s(_vm.title)),
         _c("br"),
         _vm._v(" "),
-        _vm.locked
+        _vm.isLocked
           ? _c("small", [_vm._v(_vm._s(_vm.lockedDescription))])
           : _c("small", [_vm._v(_vm._s(_vm.dateSinceCreated))])
       ])

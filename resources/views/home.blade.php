@@ -47,6 +47,7 @@
 				<div class="card-body">
 					<waitlistcard
 						v-for="card in waitList"
+						:key="card.id"
 						:inid="card.id"
 						:intitle="card.title"
 						:indescription="card.description"

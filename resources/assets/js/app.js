@@ -180,11 +180,12 @@ const app = new Vue({
 		},
 		getWaitList() {
 
+			console.log('gettting waitlist')
 			window.axios.get('/waitlist')
 				.then((response) => {
-					console.log(response.data)
 					this.waitList = response.data
-
+					app.$forceUpdate()
+					console.log('waitlist', this.waitList)
 				});
 
 		},
@@ -224,22 +225,18 @@ const app = new Vue({
 	mounted() {
 		console.log('App mounted')
 		this.getWaitList()
+		window.Echo.channel('dev-to-contest')
+			.listen('.waitlist', (e) => {
+				console.log('caught waitlist event')
+				this.getWaitList();
+			});
+
+		window.Echo.channel('dev-to-contest')
+			.listen('.calendar', (e) => {
+				console.log('caught calendar event')
+				this.refreshEvents();
+
+			});
 	}
 
 });
-
-// Echo listeners
-// Refresh waitlist
-Echo.channel('dev-to-contest')
-	.listen('.waitlist', (e) => {
-		console.log('caught waitlist event')
-		app.getWaitList();
-
-	});
-
-Echo.channel('dev-to-contest')
-	.listen('.calendar', (e) => {
-		console.log('caught calendar event')
-		app.refreshEvents();
-
-	});

@@ -30,7 +30,7 @@ class CalendarController extends Controller
 
 				$lockInfo = LockHelper::get('wait', $a->id);
 
-				$a->description = $lockInfo;
+				$a->lockDescription = $lockInfo;
 
 			}
 

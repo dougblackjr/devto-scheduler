@@ -7,10 +7,10 @@
 		v-bind:data-title='title'
 		v-bind:data-description="description"
 		@click.prevent="lock"
-		v-bind:class="{ locked: locked }"
+		v-bind:class="{ locked: isLocked }"
 	>
 		<h2>{{ title }}<br />
-			<small v-if="locked">{{ lockedDescription }}</small>
+			<small v-if="isLocked">{{ lockedDescription }}</small>
 			<small v-else>{{ dateSinceCreated }}</small>
 		</h2>
 	</aside>
@@ -18,6 +18,8 @@
 
 <script>
 	const moment = require('moment');
+
+	let self = this;
 
 	export default {
 		props: [
@@ -46,6 +48,10 @@
 				console.log(now.format(), date.format(), diff)
 
 				return diff + " " + (diff == 1 ? 'minute' : 'minutes')
+			},
+			isLocked() {
+				console.log('GETTING THE LOCK STATUS', this.locked)
+				return this.locked;
 			}
 		},
 		methods: {
@@ -75,6 +81,7 @@
 		}
 
 	}
+
 </script>
 
 <style scoped>
