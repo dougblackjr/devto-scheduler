@@ -39,6 +39,8 @@ const app = new Vue({
 			selectedResourceId: '',
 			selectedStart: '',
 			selectedEnd: '',
+			lockStart: '',
+			lockEnd: '',
 			allResourceInfo: {},
 			waitList: {},
 			eventSources: [
@@ -90,12 +92,15 @@ const app = new Vue({
 				},
 				select: function (start, end, jsEvent, view, resource) {
 
+					self.lockStart = start.format('X')
+					self.lockEnd = end.format('X');
+
 					window.lockFxns.lockTimeSlot(resource.id, start, end);
 
 					self.selectedStart = start.format().replace('Z','')
 					self.selectedEnd = end.format().replace('Z','')
 					self.selectedResourceId = resource.id
-					console.log(self.selectedStart, self.selectedEnd)
+					console.log(self.selectedStart, self.selectedEnd, self.lockStart, self.lockEnd)
 					self.toggleApptModal();
 
 				},

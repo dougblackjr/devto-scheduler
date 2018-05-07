@@ -23,6 +23,8 @@
 						:instart="selectedStart"
 						:inend="selectedEnd"
 						:inresourceid="selectedResourceId"
+						:lockstart="lockStart"
+						:lockend="lockEnd"
 						v-if="showApptModal" 
 						@close="toggleApptModal()">
 					</apptmodal>

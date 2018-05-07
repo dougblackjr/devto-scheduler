@@ -65,7 +65,9 @@
 			'indescription',
 			'instart',
 			'inend',
-			'inresourceid'
+			'inresourceid',
+			'lockstart',
+			'lockend'
 		],
 		data() {
 			return {
@@ -75,20 +77,22 @@
 				end: this.inend,
 				resource_id: this.inresourceid,
 				resources: this.res,
-				showTimes: true
+				showTimes: true,
+				lockStart: this.lockstart,
+				lockEnd: this.lockend
 			}
 		},
 		methods: {
 			closeModal() {
 				console.log('close event');
-				window.lockFxns.unlockTimeSlot(this.inresourceid, moment(this.instart), moment(this.inend));
+				window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 				this.$emit('close');
 
 			},
 			submitAppointment() {
 				let self = this
 
-				window.lockFxns.unlockTimeSlot(this.resource_id, moment(this.start), moment(this.end));
+				window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 
 				// Submit
 				if (this.title != '') {

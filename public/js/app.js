@@ -57463,6 +57463,8 @@ var app = new Vue({
 			selectedResourceId: '',
 			selectedStart: '',
 			selectedEnd: '',
+			lockStart: '',
+			lockEnd: '',
 			allResourceInfo: {},
 			waitList: {},
 			eventSources: [{
@@ -57510,12 +57512,15 @@ var app = new Vue({
 				},
 				select: function select(start, end, jsEvent, view, resource) {
 
+					self.lockStart = start.format('X');
+					self.lockEnd = end.format('X');
+
 					window.lockFxns.lockTimeSlot(resource.id, start, end);
 
 					self.selectedStart = start.format().replace('Z', '');
 					self.selectedEnd = end.format().replace('Z', '');
 					self.selectedResourceId = resource.id;
-					console.log(self.selectedStart, self.selectedEnd);
+					console.log(self.selectedStart, self.selectedEnd, self.lockStart, self.lockEnd);
 					self.toggleApptModal();
 				},
 				eventClick: function eventClick(calEvent, jsEvent, view) {
@@ -115462,7 +115467,7 @@ var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: { datetime: __WEBPACK_IMPORTED_MODULE_0_vuejs_datetimepicker___default.a },
-	props: ['showApptModal', 'res', 'intitle', 'indescription', 'instart', 'inend', 'inresourceid'],
+	props: ['showApptModal', 'res', 'intitle', 'indescription', 'instart', 'inend', 'inresourceid', 'lockstart', 'lockend'],
 	data: function data() {
 		return {
 			title: this.intitle,
@@ -115471,14 +115476,16 @@ var moment = __webpack_require__(0);
 			end: this.inend,
 			resource_id: this.inresourceid,
 			resources: this.res,
-			showTimes: true
+			showTimes: true,
+			lockStart: this.lockstart,
+			lockEnd: this.lockend
 		};
 	},
 
 	methods: {
 		closeModal: function closeModal() {
 			console.log('close event');
-			window.lockFxns.unlockTimeSlot(this.inresourceid, moment(this.instart), moment(this.inend));
+			window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 			this.$emit('close');
 		},
 		submitAppointment: function submitAppointment() {
@@ -115486,7 +115493,7 @@ var moment = __webpack_require__(0);
 
 			var self = this;
 
-			window.lockFxns.unlockTimeSlot(this.resource_id, moment(this.start), moment(this.end));
+			window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
 
 			// Submit
 			if (this.title != '') {
@@ -117157,18 +117164,24 @@ if (false) {
 /***/ }),
 /* 278 */,
 /* 279 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var moment = __webpack_require__(0);
 
 window.lockFxns = {
 	lockTimeSlot: function lockTimeSlot(resource_id, start_date, end_date) {
 		var lock = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 
 
+		var newStart = (typeof start_date === 'undefined' ? 'undefined' : _typeof(start_date)) != 'object' ? moment(start_date, 'X') : start_date;
+
 		var sendData = {
 			type: 'slot',
 			id: resource_id,
-			date: start_date.format('YYYY-MM-DD'),
-			data: start_date.utc().format('X') + '-' + end_date.utc().format('X')
+			date: newStart.format('YYYY-MM-DD'),
+			data: (typeof start_date === 'undefined' ? 'undefined' : _typeof(start_date)) == 'object' ? start_date.format('X') + '-' + end_date.format('X') : start_date + '-' + end_date
 		};
 
 		var url = lock ? '/lock' : '/unlock';

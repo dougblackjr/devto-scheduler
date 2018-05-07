@@ -1,12 +1,16 @@
+let moment = require('moment');
+
 window.lockFxns = {
 
 	lockTimeSlot(resource_id, start_date, end_date, lock = true) {
 
+		let newStart = (typeof start_date != 'object' ? moment(start_date, 'X') : start_date);
+
 		let sendData = {
 				type: 'slot',
 				id: resource_id,
-				date: start_date.format('YYYY-MM-DD'),
-				data: start_date.utc().format('X') + '-' + end_date.utc().format('X'), 
+				date: newStart.format('YYYY-MM-DD'),
+				data: (typeof start_date == 'object' ? start_date.format('X') + '-' + end_date.format('X') : start_date + '-' + end_date),
 			};
 
 		let url = (lock ? '/lock' : '/unlock')
