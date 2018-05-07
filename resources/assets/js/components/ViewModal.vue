@@ -93,7 +93,6 @@
 					// Close the modal
 					self.$emit('close');
 					window.toastr.info('Resource edited')
-					this.$parent.$options.methods.refreshEvents()
 				})
 			}
 		},

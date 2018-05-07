@@ -149,7 +149,6 @@ const app = new Vue({
 						})
 					.then((response) => {
 						toastr.info('Appointment scheduled. Resize to adjust time.');
-						self.refreshEvents()
 					})
 
 				},

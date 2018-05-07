@@ -111,7 +111,6 @@
 						// Close the modal
 						self.$emit('close');
 						window.toastr.info('Appointment added')
-						this.$parent.$options.methods.refreshEvents()
 					})
 				}
 			}

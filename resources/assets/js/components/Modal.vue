@@ -69,7 +69,6 @@
 					})
 					.then((response) => {
 						window.toastr.info('Resource added')
-						this.$parent.$options.methods.refreshEvents()
 
 					})
 				}

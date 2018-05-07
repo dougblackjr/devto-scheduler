@@ -57560,7 +57560,6 @@ var app = new Vue({
 						end: date.add(2, 'hours').format()
 					}).then(function (response) {
 						toastr.info('Appointment scheduled. Resize to adjust time.');
-						self.refreshEvents();
 					});
 				},
 				eventResize: function eventResize(event, jsEvent, ui, view) {
@@ -115168,8 +115167,6 @@ var self = this;
 
 	methods: {
 		submit: function submit() {
-			var _this = this;
-
 			// Get the title
 			// this.title = submitEvent.target.elements.resourceTitle.value
 
@@ -115184,7 +115181,6 @@ var self = this;
 					title: this.title
 				}).then(function (response) {
 					window.toastr.info('Resource added');
-					_this.$parent.$options.methods.refreshEvents();
 				});
 			}
 		}
@@ -115491,8 +115487,6 @@ var moment = __webpack_require__(0);
 			this.$emit('close');
 		},
 		submitAppointment: function submitAppointment() {
-			var _this = this;
-
 			var self = this;
 
 			window.lockFxns.unlockTimeSlot(this.inresourceid, this.lockStart, this.lockEnd);
@@ -115513,7 +115507,6 @@ var moment = __webpack_require__(0);
 					// Close the modal
 					self.$emit('close');
 					window.toastr.info('Appointment added');
-					_this.$parent.$options.methods.refreshEvents();
 				});
 			}
 		}
@@ -116685,8 +116678,6 @@ var moment = __webpack_require__(0);
 
 	methods: {
 		submit: function submit() {
-			var _this = this;
-
 			var self = this;
 
 			// Submit
@@ -116700,7 +116691,6 @@ var moment = __webpack_require__(0);
 				// Close the modal
 				self.$emit('close');
 				window.toastr.info('Resource edited');
-				_this.$parent.$options.methods.refreshEvents();
 			});
 		}
 	},
