@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('./lockFunctions');
 
 // Dependencies
 window.Vue = require('vue')
@@ -88,6 +89,8 @@ const app = new Vue({
 				},
 				select: function (start, end, jsEvent, view, resource) {
 
+					lockTimeSlot(resource.id, start.utc().format('X'), end.utc().format('X'));
+
 					self.selectedStart = start.format()
 					self.selectedEnd = end.format()
 					self.selectedResourceId = resource.id
@@ -95,6 +98,7 @@ const app = new Vue({
 
 				},
 				eventClick: function(calEvent, jsEvent, view) {
+					window.lockFxns.lock('appt', calEvent.id)
 					window.axios.get('/appointments/' + calEvent.id)
 						.then((response) => {
 							self.selectedId = response.data.id
@@ -110,6 +114,7 @@ const app = new Vue({
 
 				},
 				eventDrop: function( event, delta, revertFunc, jsEvent, ui, view ) {
+
 					window.axios.put('/appointments/' + event.id,
 						{
 							title: event.title,
@@ -124,6 +129,9 @@ const app = new Vue({
 
 				},
 				drop: function(date, jsEvent, ui, resourceId) {
+
+					// Lock on waitlist
+					window.lockFxns.lock('wait', this.dataset.id)
 
 					window.axios.put('/appointments/' + this.dataset.id,
 						{
@@ -224,7 +232,14 @@ const app = new Vue({
 // Refresh waitlist
 Echo.channel('dev-to-contest')
 	.listen('.waitlist', (e) => {
+		console.log('caught waitlist event')
+		app.getWaitList();
 
-		getWaitList();
+	});
+
+Echo.channel('dev-to-contest')
+	.listen('.calendar', (e) => {
+		console.log('caught calendar event')
+		app.refreshEvents();
 
 	});

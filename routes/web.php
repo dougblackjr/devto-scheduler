@@ -31,3 +31,7 @@ Route::put('/appointments/{id}', 'AppointmentController@update');
 
 // Calendar Routes
 Route::get('/waitlist', 'CalendarController@getWaitlist');
+
+// Lock Routes
+Route::post('/lock', 'LockController@lock');
+Route::post('/unlock', 'LockController@unlock');

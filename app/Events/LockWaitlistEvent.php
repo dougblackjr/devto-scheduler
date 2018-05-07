@@ -14,14 +14,18 @@ class LockWaitlistEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    protected $message;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($message)
     {
-        //
+
+        $this->message;
+
     }
 
     /**
@@ -31,6 +35,23 @@ class LockWaitlistEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+
         return new Channel('dev-to-contest');
+
     }
+
+    public function broadcastAs()
+    {
+
+        return 'waitlist';
+
+    }
+
+    public function broadcastWith()
+    {
+
+        return array('user' => $this->message);
+
+    }
+
 }

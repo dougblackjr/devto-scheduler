@@ -1,6 +1,18 @@
 <template>
-	<aside class="wait-list-card" draggable="true" v-bind:id='"wait-list-card-" + id' v-bind:data-id='id' v-bind:data-title='title' v-bind:data-description="description">
-		<h2>{{ title }}<br /><small>{{ dateSinceCreated }}</small></h2>
+	<aside 
+		class="wait-list-card"
+		draggable="true"
+		v-bind:id='"wait-list-card-" + id'
+		v-bind:data-id='id'
+		v-bind:data-title='title'
+		v-bind:data-description="description"
+		@click.prevent="lock"
+		v-bind:class="{ locked: locked }"
+	>
+		<h2>{{ title }}<br />
+			<small v-if="locked">{{ lockedDescription }}</small>
+			<small v-else>{{ dateSinceCreated }}</small>
+		</h2>
 	</aside>
 </template>
 
@@ -12,14 +24,18 @@
 			'inid',
 			'intitle',
 			'indescription',
-			'increateddate'
+			'increateddate',
+			'inlocked',
+			'inlockeddescription'
 		],
 		data() {
 			return {
 				id: this.inid,
 				title: this.intitle,
 				description: this.indescription,
-				createdDate: this.increateddate
+				createdDate: this.increateddate,
+				locked: this.inlocked,
+				lockedDescription: this.inlockeddescription
 			}
 		},
 		computed: {
@@ -33,16 +49,31 @@
 			}
 		},
 		methods: {
-
+			lock: function() {
+				window.lockFxns.lock('wait', this.id)
+				this.locked = true
+			}
 		},
 		mounted() {
 			console.log('Wait list card is on!', this.id)
-			$('#wait-list-card-' + this.id).draggable({
-				helper: 'clone',
-				revert: 'invalid',
-				cursor: 'move'
-			});
+			if(!this.locked) {
+
+				$('#wait-list-card-' + this.id).draggable({
+					helper: 'clone',
+					revert: function(is_valid_drop) {
+						if(!is_valid_drop) {
+							window.lockFxns.unlock('wait', this.id)
+						}
+
+						return true;
+					},
+					cursor: 'move'
+				});
+
+			}
+
 		}
+
 	}
 </script>
 
@@ -63,5 +94,9 @@
 
 	small {
 		font-size: 0.8rem;
+	}
+
+	.locked {
+		opacity: 0.5;
 	}
 </style>

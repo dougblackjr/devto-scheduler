@@ -41,14 +41,14 @@ class LockTimeSlotEvent implements ShouldBroadcast
     public function broadcastAs()
     {
 
-        return 'lock-slot';
+        return 'calendar';
 
     }
 
     public function broadcastWith()
     {
 
-        return $this->message;
+        return array('user' => $this->message);
 
     }
 }

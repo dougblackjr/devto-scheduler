@@ -10,6 +10,7 @@ use Cake\Chronos\Chronos;
 use Carbon\Carbon;
 use App\Helpers\LockHelper;
 use App\Events\UpdateWaitlistEvent;
+use App\Events\NewAppointmentEvent;
 
 class AppointmentController extends Controller
 {
@@ -35,6 +36,8 @@ class AppointmentController extends Controller
 
 			event(new UpdateWaitlistEvent($resource->toArray()));
 
+		} else {
+			event(new NewAppointmentEvent($resource->toArray()));
 		}
 
 		return response()->json($resource);
@@ -47,13 +50,7 @@ class AppointmentController extends Controller
 		$appt = Appointment::where('id', $id)->first();
 
 		// Let's create an appointment lock if it has a time, or a waitlist lock if not
-		if(is_null($appt->start) || $is_null($appt->end)) {
-			// Waitlist lock
-			
-		} else {
-			// Appt lock
-			
-		}
+		LockHelper::lock('appt', $id);
 
 		return response()->json($appt);
 
@@ -76,6 +73,8 @@ class AppointmentController extends Controller
 
 		);
 
+		event(new NewAppointmentEvent($appt->toArray()));
+
 		return response()->json($appt);
 
 	}
@@ -96,10 +95,18 @@ class AppointmentController extends Controller
 				'title' => $r->title,
 				'description' => $r->description,
 				'start' => $r->start,
-				'end' => $r->end
+				'end' => $r->end,
+				'className' => (LockHelper::has('appt', $r->id) ? 'locked' : '')
 			);
 
 		});
+
+		// Get Slot Locks
+		$locks = LockHelper::get('slot');
+
+		foreach ($locks as $key => $value) {
+			dd($locks, $key, $value);
+		}
 
 		return response()->json($outputData);
 

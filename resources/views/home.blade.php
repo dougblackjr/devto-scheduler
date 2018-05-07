@@ -50,7 +50,9 @@
 						:inid="card.id"
 						:intitle="card.title"
 						:indescription="card.description"
-						:increateddate="card.created_at">
+						:increateddate="card.created_at"
+						:inlocked="card.locked"
+						:inlockeddescription="card.lockedDescription">
 					</waitlistcard>
 				</div>
 			</div>

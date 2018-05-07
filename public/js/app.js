@@ -57423,6 +57423,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_toastr_build_toastr_min_css__ = __webpack_require__(249);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_toastr_build_toastr_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_toastr_build_toastr_min_css__);
 __webpack_require__(171);
+__webpack_require__(279);
 
 // Dependencies
 window.Vue = __webpack_require__(31);
@@ -57508,12 +57509,15 @@ var app = new Vue({
 				},
 				select: function select(start, end, jsEvent, view, resource) {
 
+					lockTimeSlot(resource.id, start.utc().format('X'), end.utc().format('X'));
+
 					self.selectedStart = start.format();
 					self.selectedEnd = end.format();
 					self.selectedResourceId = resource.id;
 					self.toggleApptModal();
 				},
 				eventClick: function eventClick(calEvent, jsEvent, view) {
+					window.lockFxns.lock('appt', calEvent.id);
 					window.axios.get('/appointments/' + calEvent.id).then(function (response) {
 						self.selectedId = response.data.id;
 						self.selectedTitle = response.data.title;
@@ -57526,6 +57530,7 @@ var app = new Vue({
 					});
 				},
 				eventDrop: function eventDrop(event, delta, revertFunc, jsEvent, ui, view) {
+
 					window.axios.put('/appointments/' + event.id, {
 						title: event.title,
 						description: event.description,
@@ -57537,6 +57542,9 @@ var app = new Vue({
 					});
 				},
 				drop: function drop(date, jsEvent, ui, resourceId) {
+
+					// Lock on waitlist
+					window.lockFxns.lock('wait', this.dataset.id);
 
 					window.axios.put('/appointments/' + this.dataset.id, {
 						title: this.dataset.title,
@@ -57618,8 +57626,13 @@ var app = new Vue({
 // Echo listeners
 // Refresh waitlist
 Echo.channel('dev-to-contest').listen('.waitlist', function (e) {
+	console.log('caught waitlist event');
+	app.getWaitList();
+});
 
-	getWaitList();
+Echo.channel('dev-to-contest').listen('.calendar', function (e) {
+	console.log('caught calendar event');
+	app.refreshEvents();
 });
 
 /***/ }),
@@ -117011,7 +117024,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.wait-list-card[data-v-23bd0ccc] {\n\tbackground-color: #89b4ce;\n\tborder-radius: 10px;\n\tborder: 1px solid #4e4e4e;\n\ttext-align: center;\n\tmargin: 1rem;\n}\nh2[data-v-23bd0ccc] {\n\tfont-size: 1rem;\n\tfont-weight: bold;\n\tpadding: 2px;\n}\nsmall[data-v-23bd0ccc] {\n\tfont-size: 0.8rem;\n}\n", ""]);
+exports.push([module.i, "\n.wait-list-card[data-v-23bd0ccc] {\n\tbackground-color: #89b4ce;\n\tborder-radius: 10px;\n\tborder: 1px solid #4e4e4e;\n\ttext-align: center;\n\tmargin: 1rem;\n}\nh2[data-v-23bd0ccc] {\n\tfont-size: 1rem;\n\tfont-weight: bold;\n\tpadding: 2px;\n}\nsmall[data-v-23bd0ccc] {\n\tfont-size: 0.8rem;\n}\n.locked[data-v-23bd0ccc] {\n\topacity: 0.5;\n}\n", ""]);
 
 // exports
 
@@ -117028,17 +117041,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: ['inid', 'intitle', 'indescription', 'increateddate'],
+	props: ['inid', 'intitle', 'indescription', 'increateddate', 'inlocked', 'inlockeddescription'],
 	data: function data() {
 		return {
 			id: this.inid,
 			title: this.intitle,
 			description: this.indescription,
-			createdDate: this.increateddate
+			createdDate: this.increateddate,
+			locked: this.inlocked,
+			lockedDescription: this.inlockeddescription
 		};
 	},
 
@@ -117052,14 +117079,28 @@ var moment = __webpack_require__(0);
 			return diff + " " + (diff == 1 ? 'minute' : 'minutes');
 		}
 	},
-	methods: {},
+	methods: {
+		lock: function lock() {
+			window.lockFxns.lock('wait', this.id);
+			this.locked = true;
+		}
+	},
 	mounted: function mounted() {
 		console.log('Wait list card is on!', this.id);
-		$('#wait-list-card-' + this.id).draggable({
-			helper: 'clone',
-			revert: 'invalid',
-			cursor: 'move'
-		});
+		if (!this.locked) {
+
+			$('#wait-list-card-' + this.id).draggable({
+				helper: 'clone',
+				revert: function revert(is_valid_drop) {
+					if (!is_valid_drop) {
+						window.lockFxns.unlock('wait', this.id);
+					}
+
+					return true;
+				},
+				cursor: 'move'
+			});
+		}
 	}
 });
 
@@ -117075,19 +117116,29 @@ var render = function() {
     "aside",
     {
       staticClass: "wait-list-card",
+      class: { locked: _vm.locked },
       attrs: {
         draggable: "true",
         id: "wait-list-card-" + _vm.id,
         "data-id": _vm.id,
         "data-title": _vm.title,
         "data-description": _vm.description
+      },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.lock($event)
+        }
       }
     },
     [
       _c("h2", [
         _vm._v(_vm._s(_vm.title)),
         _c("br"),
-        _c("small", [_vm._v(_vm._s(_vm.dateSinceCreated))])
+        _vm._v(" "),
+        _vm.locked
+          ? _c("small", [_vm._v(_vm._s(_vm.lockedDescription))])
+          : _c("small", [_vm._v(_vm._s(_vm.dateSinceCreated))])
       ])
     ]
   )
@@ -117107,6 +117158,51 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 278 */,
+/* 279 */
+/***/ (function(module, exports) {
+
+window.lockFxns = {
+	lockTimeSlot: function lockTimeSlot(resource_id, start_date, end_date) {
+		var lock = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
+
+		var sendData = {
+			type: 'slot',
+			id: resource_id,
+			date: start_date.format('YYYY-MM-DD'),
+			data: start_date.format('X') + '-' + end_date.format('X')
+		};
+
+		var url = lock ? '/lock' : '/unlock';
+
+		window.axios.post(url, sendData).then(function (response) {
+			console.log(response.data);
+		});
+	},
+	unlockTimeSlot: function unlockTimeSlot(resource_id, start_date, end_date) {
+		this.lockTimeSlot(resource_id, start_date, end_date, false);
+	},
+	lock: function lock(type, id) {
+		var lock = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+		var sendData = {
+			type: type,
+			id: id
+		};
+
+		var url = lock ? '/lock' : '/unlock';
+
+		window.axios.post(url, sendData).then(function (response) {
+			console.log(response.data);
+		});
+	},
+	unlock: function unlock(type, id) {
+		this.lock(type, id, false);
+	}
+};
 
 /***/ })
 /******/ ]);

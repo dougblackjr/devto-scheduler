@@ -36,7 +36,7 @@ class UpdateWaitlistEvent implements ShouldBroadcast
     public function broadcastOn()
     {
 
-        return new Channel('dev-to');
+        return new Channel('dev-to-contest');
 
     }
 
@@ -50,7 +50,7 @@ class UpdateWaitlistEvent implements ShouldBroadcast
     public function broadcastWith()
     {
 
-        return $this->message;
+        return array('user' => $this->message);
 
     }
 
