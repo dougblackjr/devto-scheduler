@@ -98,7 +98,7 @@
                                 <li>Register as a user, or use <em>fake@gmail.com</em> with password <em>nutella</em>.</li>
                                 <li>Create a room, or create an appointment!</li>
                             </ol>
-                            <p>Note: For demo purposes, the database will reset every 3 hours. Your data will disappear.</p>
+                            <p>Note: For demo purposes, the database will reset every hour and your data will disappear.</p>
                         </div>
                     </div>
                 </div>
