@@ -12,6 +12,15 @@
                         @csrf
 
                         <div class="form-group row">
+                            <div class="col-md-12">
+                                <p>You don't need to register. If you do, your info will be deleted on the hour.</p>
+                                <p>If you don't want to register, login with:</p>
+                                <p>user: fake@gmail.com</p>
+                                <p>pass: nutella</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
