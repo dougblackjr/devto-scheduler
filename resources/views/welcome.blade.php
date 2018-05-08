@@ -94,6 +94,7 @@
                     <div class="card">
                         <div class="card-header">How to Get Started</div>
                         <div class="card-body">
+                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/LT6YtcJ6dZI?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                             <ol>
                                 <li>Register as a user, or use <em>fake@gmail.com</em> with password <em>nutella</em>.</li>
                                 <li>Create a room, or create an appointment!</li>
