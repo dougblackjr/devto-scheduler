@@ -60,6 +60,14 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <p>Don't want to register?</p>
+                                <p>username: fake@gmail.com</p>
+                                <p>password: nutella</p>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
