@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <!-- Styles -->
         <style>
             html, body {
@@ -19,10 +19,6 @@
                 font-weight: 100;
                 height: 100vh;
                 margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
             }
 
             .flex-center {
@@ -79,17 +75,64 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    dev.to Scheduler
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">tl;dr</div>
+                        <div class="card-body">
+                            <p>This scheduler allows you to create appointments to be scheduled in different rooms. You can create rooms, create appointments to be added directly to the scheduler, move appointments between rooms and time slots on the scheduler, schedule appointments without a time to be added later (drag and drop them on).</p>
+                            <p>The scheduler uses sockets to communicate with others on the schedule, so that appointments time slots lock out when you are scheduling there, or when you are editing an appointment.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">How to Get Started</div>
+                        <div class="card-body">
+                            <ol>
+                                <li>Register as a user, or use <em>fake@gmail.com</em> with password <em>nutella</em>.</li>
+                                <li>Create a room, or create an appointment!</li>
+                            </ol>
+                            <p>Note: For demo purposes, the database will reset every 3 hours. Your data will disappear.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">Tech Stack</div>
+                        <div class="card-body">
+                            <a href="https://laravel.com/" rel="nofollow" target="_blank">
+                                <img src="./images/laravel.png" class="img-thumbnail" />
+                            </a>
+                            <a href="https://vuejs.org/" rel="nofollow" target="_blank">
+                                <img src="./images/vue.png" class="img-thumbnail" />
+                            </a>
+                            <a href="https://pusher.com/" rel="nofollow" target="_blank">
+                                <img src="./images/pusher.png" class="img-thumbnail" />
+                            </a>
+                            <p>
+                                <a href="https://fullcalendar.io/" rel="nofollow" target="_blank">
+                                    fullcalendar
+                                </a>
+                            </p>
+                            <p>
+                                <a href="https://fullcalendar.io/scheduler" rel="nofollow" target="_blank">
+                                    fullcalendar Scheduler
+                                </a>
+                            </p>
+                            <p>
+                                <a href="https://github.com/CodeSeven/toastr" rel="nofollow" target="_blank">
+                                    toastr
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </body>
 </html>

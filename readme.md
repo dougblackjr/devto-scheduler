@@ -12,3 +12,5 @@
 9. In new window, `docker-compose exec php-fpm bash`
 10. Register a user.
 11. Schedule an appointment!
+
+##
